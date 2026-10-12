@@ -1,0 +1,9 @@
+*.zip
+*token.txt
+build/
+managed_components/
+sdkconfig.old
+**/.clangd
+**/.devcontainer/
+**/.vscode/
+**/.lock/
