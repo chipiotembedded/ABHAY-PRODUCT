@@ -19,7 +19,6 @@ typedef struct {
     bool buttonPressed;
     char OwnerName[16];
     char FlatNumber[16];
-    // time_t timestamp;
     char timestamp[20];
 } log_entry;
 

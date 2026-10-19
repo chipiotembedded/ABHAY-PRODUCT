@@ -54,4 +54,7 @@ void i2c_lcd_clear(void);
 void i2c_lcd_backlight(uint8_t state);
 void i2c_lcd_write_char(char c);
 
+void lcd_register_activity(void);
+void lcd_backlight_timeout_task(void *arg);
+
 #endif

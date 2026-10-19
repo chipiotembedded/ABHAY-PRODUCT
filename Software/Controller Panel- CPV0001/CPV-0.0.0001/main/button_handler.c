@@ -3,6 +3,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
+#include "usb_update.h"
 
 const TickType_t button_debounce_delay = pdMS_TO_TICKS(0);
 
@@ -42,17 +43,12 @@ void handle_button1_action() {
             break;
             
         case STATE_LEVEL2_MENU:
+            vTaskDelay(pdMS_TO_TICKS(100));
             request_screen(STATE_FLAT_OWNER);
             vTaskDelay(button_debounce_delay);
             break;
             
-        case STATE_LEVEL3_MENU:
-            request_screen(STATE_INSTALLATION_MODE);
-            vTaskDelay(button_debounce_delay);
-            break;
         default:
-            // i2c_lcd_set_cursor(0, 0);
-            // i2c_lcd_send_string("Invalid Screen");
             break;
     }
 }
@@ -72,19 +68,8 @@ void handle_button2_action(){
             request_screen(STATE_PASSWORD);
             vTaskDelay(button_debounce_delay);
             break;
-            
-        case STATE_LEVEL2_MENU:
-            request_screen(STATE_UPDATE_INFO);
-            vTaskDelay(button_debounce_delay);
-            break;
-            
-        case STATE_LEVEL3_MENU:
-            request_screen(STATE_INSTALLATION_MODE);
-            vTaskDelay(button_debounce_delay);
-            break;
+
         default:
-            // i2c_lcd_set_cursor(0, 0);
-            // i2c_lcd_send_string("Invalid Screen");
             break;
     }
 }
@@ -109,11 +94,6 @@ void handle_back_button_action(){
             request_screen(STATE_MAIN_MENU);
             vTaskDelay(button_debounce_delay);
             break;
-            
-        case STATE_LEVEL3_MENU:
-            request_screen(STATE_MAIN_MENU);
-            vTaskDelay(button_debounce_delay);
-            break;
 
         case STATE_ACTIVITY_LOG:
             request_screen(STATE_LEVEL1_MENU);
@@ -129,20 +109,8 @@ void handle_back_button_action(){
             request_screen(STATE_LEVEL2_MENU);
             vTaskDelay(button_debounce_delay);
             break;
-
-        case STATE_UPDATE_INFO:
-            request_screen(STATE_LEVEL2_MENU);
-            vTaskDelay(button_debounce_delay);
-            break;
-
-        case STATE_INSTALLATION_MODE:
-            request_screen(STATE_LEVEL3_MENU);
-            vTaskDelay(button_debounce_delay);
-            break;
             
         default:
-            // i2c_lcd_set_cursor(0, 0);
-            // i2c_lcd_send_string("Invalid Screen");
             break;
     }
 }
@@ -156,7 +124,6 @@ void handle_up_button_action(){
         vTaskDelay(button_debounce_delay);
     }
     else if (current_state == STATE_ACTIVITY_LOG && total_logs > 0) {
-        // current_log_index = (current_log_index - 1 + total_logs) % total_logs;
         if (current_log_index > 0) {
             current_log_index--;
         } else {
@@ -170,7 +137,6 @@ void handle_up_button_action(){
         show_owner_slide(current_owner);   // from flash_csv.c
         vTaskDelay(button_debounce_delay);
     }
-    //break;
 }
 
 void handle_next_button_action() {
@@ -227,18 +193,13 @@ void handle_silence_button(void) {
     gpio_set_level(BUZZER_PIN, 0);
     printf("Buzzer silenced\n");
 }
-    // Optional LCD message
-//     i2c_lcd_clear();
-//     i2c_lcd_set_cursor(0, 0);
-//     i2c_lcd_send_string("Buzzer Silenced");
-
-
 
 void button_task(void *arg) {
     while (1) {
         if (gpio_get_level(BUTTON_1) == 0) {
             vTaskDelay(pdMS_TO_TICKS(50));
             if (gpio_get_level(BUTTON_1) == 0) {
+                lcd_register_activity();
                 handle_button1_action();
                 vTaskDelay(pdMS_TO_TICKS(200));
             }
@@ -247,6 +208,7 @@ void button_task(void *arg) {
         if (gpio_get_level(BUTTON_2) == 0) {
             vTaskDelay(pdMS_TO_TICKS(50));
             if (gpio_get_level(BUTTON_2) == 0) {
+                lcd_register_activity();
                 handle_button2_action();
                 vTaskDelay(pdMS_TO_TICKS(200));
             }
@@ -255,6 +217,7 @@ void button_task(void *arg) {
         if (gpio_get_level(BUTTON_BACK) == 0) {
             vTaskDelay(pdMS_TO_TICKS(50));
             if (gpio_get_level(BUTTON_BACK) == 0) {
+                lcd_register_activity();
                 handle_back_button_action();
                 vTaskDelay(pdMS_TO_TICKS(200));
             }
@@ -263,6 +226,7 @@ void button_task(void *arg) {
         if (gpio_get_level(BUTTON_UP) == 0) {
             vTaskDelay(pdMS_TO_TICKS(50));
             if (gpio_get_level(BUTTON_UP) == 0) {
+                lcd_register_activity();
                 handle_up_button_action();
                 vTaskDelay(pdMS_TO_TICKS(200));
             }
@@ -271,6 +235,7 @@ void button_task(void *arg) {
         if (gpio_get_level(BUTTON_NEXT) == 0) {
             vTaskDelay(pdMS_TO_TICKS(50));
             if (gpio_get_level(BUTTON_NEXT) == 0) {
+                lcd_register_activity();
                 handle_next_button_action();
                 vTaskDelay(pdMS_TO_TICKS(200));
             }
@@ -279,6 +244,7 @@ void button_task(void *arg) {
         if (gpio_get_level(Silence_BUTTON) == 0) {
             vTaskDelay(pdMS_TO_TICKS(50));
             if (gpio_get_level(Silence_BUTTON) == 0) {
+                lcd_register_activity();
                 handle_silence_button();
                 vTaskDelay(pdMS_TO_TICKS(200));
             }
@@ -321,8 +287,6 @@ void handle_button_press(int button) {
             break;
 
         default:
-            // i2c_lcd_set_cursor(0, 0);
-            // i2c_lcd_send_string("Invalid Screen");
             break;
     }
 }

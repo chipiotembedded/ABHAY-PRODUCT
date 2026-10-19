@@ -96,7 +96,6 @@
 #define PIN_NUM_MOSI 35  //FSPID
 #define PIN_NUM_CLK  36  //FSPICLK
 #define PIN_NUM_CS   39   //FSPICS0
-// #define PIN_NUM_CS 48
 #define PIN_NUM_RST  16   
 #define PIN_NUM_DIO0 33
 
@@ -208,7 +207,8 @@ lora_idle(void)
 void 
 lora_sleep(void)
 { 
-   lora_write_reg(REG_OP_MODE, MODE_LONG_RANGE_MODE | MODE_SLEEP);
+   // lora_write_reg(REG_OP_MODE, MODE_LONG_RANGE_MODE | MODE_SLEEP);
+   lora_write_reg(REG_OP_MODE, 0x00);
 }
 
 /**

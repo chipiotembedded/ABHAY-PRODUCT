@@ -6,7 +6,6 @@
 
 // ================== Hardware Pins ==================
 #define BUZZER_PIN 9
-//#define BUTTON_PIN 18
 
 // ================== Flat Owner Info ==================
 typedef struct {

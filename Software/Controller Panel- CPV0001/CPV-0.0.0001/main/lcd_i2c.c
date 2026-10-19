@@ -134,3 +134,38 @@ void i2c_lcd_write_char(char c) {
 // void lcd_backlight_off_cb(TimerHandle_t xTimer) {
 //     i2c_lcd_backlight(0);
 // }
+
+volatile uint32_t lcd_last_activity = 0;
+bool lcd_backlight_is_on = true;
+
+#define LCD_INACTIVITY_TIMEOUT_MS  10000   // 10 seconds
+
+void lcd_backlight_timeout_task(void *arg)
+{
+    lcd_last_activity = xTaskGetTickCount();
+
+    while (1)
+    {
+        uint32_t now = xTaskGetTickCount();
+
+        if (lcd_backlight_is_on &&
+            (now - lcd_last_activity) * portTICK_PERIOD_MS >= LCD_INACTIVITY_TIMEOUT_MS)
+        {
+            i2c_lcd_backlight(0);     // turn OFF
+            lcd_backlight_is_on = false;
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(500));  // check every 0.5 sec
+    }
+}
+
+void lcd_register_activity(void)
+{
+    lcd_last_activity = xTaskGetTickCount();
+
+    if (!lcd_backlight_is_on) {
+        i2c_lcd_backlight(1);     // turn ON
+        lcd_backlight_is_on = true;
+    }
+}
+

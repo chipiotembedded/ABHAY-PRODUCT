@@ -174,26 +174,9 @@ void display_log_entry(int index) {
 
 // Add this temporary debug function to activity_log.c
 void debug_print_all_logs() {
-    log_entry entry;
+    //log_entry entry;
     ESP_LOGI(ACTIVITY_LOG_TAG, "--- DUMPING ALL LOGS ---");
     ESP_LOGI(ACTIVITY_LOG_TAG, "Total logs: %d", total_logs);
     
-    for (int i = 0; i < total_logs; i++) {
-        if (read_log_entry(i, &entry)) {
-            //char time_str[20];
-            // struct tm *timeinfo = localtime(&entry.timestamp);
-            // strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", timeinfo);
-            //const char *time_str = entry.timestamp;
-
-            // ESP_LOGI(ACTIVITY_LOG_TAG,
-            //         "\nOwner: %s\nFlat: %s\nDate/Time: %s\nIndex: %d/%d\nButton: %s",
-            //         entry.OwnerName,
-            //         entry.FlatNumber,
-            //         entry.timestamp,
-            //         i + 1,
-            //         total_logs,
-            //         entry.buttonPressed ? "PRESSED" : "released");
-        }
-    }
     ESP_LOGI(ACTIVITY_LOG_TAG, "Entered Activity log");
 }

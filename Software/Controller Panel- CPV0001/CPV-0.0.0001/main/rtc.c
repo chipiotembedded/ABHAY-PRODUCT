@@ -6,7 +6,7 @@
 static const char *TAG = "RTC";
 
 // Global time variable
-rtc_time_t current_time = {2025, 9, 8, 12, 0, 0};
+rtc_time_t current_time = {25, 9, 8, 12, 0, 0};
 
 // Days in each month
 static const int days_in_month[] = {31,28,31,30,31,30,31,31,30,31,30,31};
@@ -76,11 +76,13 @@ void rtc_task(void *pvParameters) {
 
 void app_rtc_init(void) {
     load_time_from_nvs();
-    xTaskCreate(rtc_task, "rtc_task", 4096, NULL, 5, NULL);
+    xTaskCreate(rtc_task, "rtc_task", 2048, NULL, 5, NULL);
 }
 
 void rtc_get_time_str(char *buffer, int len) {
-    snprintf(buffer, len, "%04d-%02d-%02d %02d:%02d:%02d",
-             current_time.year, current_time.month, current_time.day,
-             current_time.hours, current_time.min, current_time.sec);
+    snprintf(buffer, len, "%02d-%02d-%02d %02d:%02d",
+            //  current_time.year, current_time.month, current_time.day,
+            //  current_time.hours, current_time.min, current_time.sec);
+            current_time.day,current_time.month, current_time.year,
+            current_time.hours, current_time.min);
 }

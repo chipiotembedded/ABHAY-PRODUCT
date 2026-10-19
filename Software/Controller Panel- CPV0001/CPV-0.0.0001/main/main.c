@@ -8,7 +8,7 @@
 #include "esp_log.h"
 #include "lora_receive.h"
 #include "activity_log.h"
-#include "flash_csv.h"
+#include "usb_update.h"
 
 static const char *TAG = "Main";
 static QueueHandle_t display_queue = NULL;
@@ -36,13 +36,6 @@ void app_main(void) {
     system_initialize();
     receiver_start();
 
-    
-    // if (flash_csv_mount() == ESP_OK) {
-    //     load_owners_from_csv();   // load last saved owners from flash
-    // }
-
-    //xTaskCreate(flat_owner_nav_task, "FlatOwnerNav", 2048, NULL, 2, NULL);
-    
     // Create display queue
     display_queue = xQueueCreate(10, sizeof(StateID));
     if(display_queue == NULL) {
@@ -59,6 +52,18 @@ void app_main(void) {
     if(xTaskCreate(button_task, "Buttons", 4096, NULL, 5, NULL) != pdPASS) {
         ESP_LOGE(TAG, "Failed to create button task");
         return;
+    }
+
+    if (xTaskCreate(usb_update_task, "usb_update_task", 8192, NULL, 4, NULL) != pdPASS) {
+        ESP_LOGE(TAG, "Failed to create USB update task");
+    }else {
+        ESP_LOGI(TAG, "USB update task created successfully");
+    }
+
+    if (xTaskCreate(lcd_backlight_timeout_task, "lcd_bl_timer", 2048, NULL, 5, NULL) != pdPASS) {
+        ESP_LOGE(TAG, "Failed to create lcd_bl_timer task");
+    }else {
+        ESP_LOGI(TAG, "lcd_bl_timer task created successfully");
     }
     
     ESP_LOGI(TAG, "Starting application");

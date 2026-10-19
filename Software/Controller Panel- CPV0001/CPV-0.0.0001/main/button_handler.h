@@ -22,7 +22,6 @@ void handle_back_button_action();
 void handle_up_button_action();
 void handle_next_button_action();
 void handle_silence_button(void);
-void handle_button_press(int button);
 //void display_log_entry(int index);
 
 #endif
