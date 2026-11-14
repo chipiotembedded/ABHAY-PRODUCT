@@ -1,9 +1,37 @@
-*.zip
-*token.txt
+# Build output
 build/
+
+# ESP-IDF managed components
 managed_components/
+
+# Backup configuration
 sdkconfig.old
-**/.clangd
-**/.devcontainer/
+
+# IDE files
+.vscode/
+.devcontainer/
+.clangd
+
+# Ignore in subfolders
 **/.vscode/
+**/.devcontainer/
+**/.clangd
 **/.lock/
+
+# Archives
+*.zip
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+
+# Secrets
+token.txt
+*token*.txt
+*.env
+
+#Readme
+README.md
