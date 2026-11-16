@@ -4,10 +4,10 @@
 #include "lcd_i2c.h"
 #include "button_handler.h"
 #include "screen_display.h"
-#include "system_states.h"
 #include "rtc.h"
 #include "activity_log.h"
 #include "usb_update.h"
+#include "button_handler.h"
 
 /**
  * @brief Initializes all system components

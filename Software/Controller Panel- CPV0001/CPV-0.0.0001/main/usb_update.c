@@ -1,20 +1,4 @@
 #include "usb_update.h"
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <dirent.h>
-#include <sys/stat.h>
-#include <ctype.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/queue.h"
-#include "esp_log.h"
-#include "esp_err.h"
-#include "usb/usb_host.h"
-#include "usb/msc_host.h"
-#include "usb/msc_host_vfs.h"
-#include "esp_littlefs.h"
-#include "lcd_i2c.h"
 
 static const char *TAG = "USB_UPDATE";
 static bool littlefs_mounted=false;
@@ -117,6 +101,31 @@ static bool copy_csv_to_lfs() {
     fclose(src);
     fclose(dst);
     ESP_LOGI(TAG, "CSV copied to LittleFS");
+
+    //For Password
+    FILE *src1 = fopen(USB_PASS_FILE, "r");
+    if (!src) {
+        ESP_LOGE(TAG, "Failed to open USB file");
+        return false;
+    }
+
+    FILE *dst1 = fopen(SPIFFS_PASS_FILE, "w");
+    if (!dst) {
+        ESP_LOGE(TAG, "Failed to create LFS file");
+        fclose(src);
+        return false;
+    }
+
+    char buf1[128];
+    size_t r1;
+    while ((r1 = fread(buf1, 1, sizeof(buf1), src1)) > 0) {
+        fwrite(buf1, 1, r1, dst1);
+    }
+
+    fclose(src1);
+    fclose(dst1);
+    ESP_LOGI(TAG, "Password file copied to LittleFS");
+    
     return true;
 }
 
@@ -282,7 +291,7 @@ void usb_update_task(void *arg) {
 
     // Try to load existing CSV from LittleFS
     load_owners_from_csv(LFS_FILE_PATH);
-
+    load_pass_from_txt(SPIFFS_PASS_FILE);
     ESP_LOGI(TAG, "Waiting for USB device");
 
     msc_host_device_handle_t dev = NULL;
@@ -323,6 +332,7 @@ void usb_update_task(void *arg) {
             // Copy and load CSV
             if (copy_csv_to_lfs()) {
                 load_owners_from_csv(LFS_FILE_PATH);
+                load_pass_from_txt(SPIFFS_PASS_FILE);
             }
         }
 

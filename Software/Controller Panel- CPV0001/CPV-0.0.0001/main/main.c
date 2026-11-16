@@ -1,4 +1,3 @@
-#include "system_states.h"
 #include "screen_display.h"
 #include "button_handler.h"
 #include "system_init.h"
@@ -9,6 +8,7 @@
 #include "lora_receive.h"
 #include "activity_log.h"
 #include "usb_update.h"
+#include "password.h"
 
 static const char *TAG = "Main";
 static QueueHandle_t display_queue = NULL;
@@ -17,8 +17,9 @@ static QueueHandle_t display_queue = NULL;
 StateID current_state = STATE_BOOT;
 int entered_password[PASSWORD_LENGTH] = {0};
 int current_digit_index = 0;
-const int correct_password[PASSWORD_LENGTH] = {1, 1, 1, 1};
+//const int correct_password[PASSWORD_LENGTH] = {1, 1, 1, 1};
 bool password_verified = false;
+
 
 void display_task(void *arg) {
     StateID id;

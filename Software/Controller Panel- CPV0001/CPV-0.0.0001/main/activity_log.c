@@ -1,10 +1,4 @@
-// activity_log.c
 #include "activity_log.h"
-#include "lcd_i2c.h"
-#include "rtc.h"
-#include <string.h>
-#include <stdio.h>
-//#include "esp_log.h"
 
 SemaphoreHandle_t nvs_mutex = NULL;
 int total_logs = 0;

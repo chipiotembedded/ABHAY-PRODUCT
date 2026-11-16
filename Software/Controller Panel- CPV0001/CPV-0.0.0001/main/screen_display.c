@@ -1,13 +1,4 @@
 #include "screen_display.h"
-#include "lcd_i2c.h"
-#include "button_handler.h"
-#include "system_states.h"
-#include "activity_log.h"
-#include "usb_update.h"
-#include <string.h>
-#include <stdio.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 
 void request_screen(StateID state) {
     if (state < STATE_COUNT) {

@@ -207,8 +207,8 @@ lora_idle(void)
 void 
 lora_sleep(void)
 { 
-   // lora_write_reg(REG_OP_MODE, MODE_LONG_RANGE_MODE | MODE_SLEEP);
-   lora_write_reg(REG_OP_MODE, 0x00);
+   lora_write_reg(REG_OP_MODE, MODE_LONG_RANGE_MODE | MODE_SLEEP);
+   // lora_write_reg(REG_OP_MODE, 0x00);
 }
 
 /**

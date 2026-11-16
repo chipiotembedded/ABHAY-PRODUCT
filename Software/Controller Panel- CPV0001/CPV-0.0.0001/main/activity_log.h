@@ -2,13 +2,18 @@
 #ifndef ACTIVITY_LOG_H
 #define ACTIVITY_LOG_H
 
+#include <string.h>
+#include <stdio.h>
 #include <stdbool.h>
 #include <time.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 #include "nvs_flash.h"
 #include "esp_log.h"
-#include "system_states.h"
+#include "button_handler.h"
+#include "lcd_i2c.h"
+#include "rtc.h"
+
 
 #define ACTIVITY_LOG_TAG  "ACTIVITY_LOG"
 #define NVS_NAMESPACE "lora_logs"

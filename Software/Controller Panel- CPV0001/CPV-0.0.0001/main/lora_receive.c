@@ -1,25 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <inttypes.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "driver/gpio.h"
-#include "esp_log.h"
-#include "esp_system.h"
-#include "esp_wifi.h"
-#include "esp_vfs.h"
-#include "esp_littlefs.h"
-#include "esp_timer.h"   // for esp_timer_get_time()
-
-#include "lora.h"
-#include "lcd_i2c.h"
-#include "usb_update.h"
 #include "lora_receive.h"
-#include "activity_log.h"
-#include "system_states.h"
-#include "button_handler.h"
-#include "rtc.h"
 
 #define TAG "LORA_RECEIVE"
 #define MAX_SENDERS 100
