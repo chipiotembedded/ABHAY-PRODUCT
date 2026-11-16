@@ -4,19 +4,6 @@ int total_logs = 0;
 int current_log_index = 0;
 
 void initialize_activity_log() {
-    // esp_vfs_littlefs_conf_t conf = {
-    //     .base_path = "/littlefs",
-    //     .partition_label = "storage",
-    //     .format_if_mount_failed = true,
-    //     .dont_mount = false,
-    // };
-
-    // esp_err_t ret = esp_vfs_littlefs_register(&conf);
-    // if (ret != ESP_OK) {
-    //     ESP_LOGE(ACTIVITY_LOG_TAG, "LittleFS mount failed");
-    //     return;
-    // }
-
     ESP_LOGI(ACTIVITY_LOG_TAG, "LittleFS mounted");
 
     total_logs = get_total_logs();
@@ -103,22 +90,6 @@ void display_log_entry(int index) {
         i2c_lcd_send_string(index_str);
     }
 }
-
-// void trim_old_logs()
-// {
-//     FILE *f = fopen(ACTIVITY_FILE_PATH, "r");
-//     if (!f) return;
-
-//     log_entry buffer[MAX_LOGS];
-
-//     fseek(f, sizeof(log_entry), SEEK_SET);
-//     fread(buffer, sizeof(log_entry), MAX_LOGS - 1, f);
-//     fclose(f);
-
-//     f = fopen(ACTIVITY_FILE_PATH, "w");
-//     fwrite(buffer, sizeof(log_entry), MAX_LOGS - 1, f);
-//     fclose(f);
-// }
 
 void clear_activity_logs(void)
 {

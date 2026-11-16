@@ -10,6 +10,7 @@
 #include "usb_update.h"
 #include "password.h"
 #include "system_init.h"
+#include "log_manager.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
@@ -27,7 +28,7 @@ typedef enum {
     STATE_UPDATE_INFO,
     STATE_INSTALLATION_MODE,
     STATE_COUNT,
-    STATE_SEND_TO_USB
+    STATE_SEND_ACTLOG_TO_USB
 
 } StateID;
 

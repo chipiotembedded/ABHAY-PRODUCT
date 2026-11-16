@@ -1,5 +1,4 @@
 #include "usb_update.h"
-
 static const char *TAG = "USB_UPDATE";
 static bool littlefs_mounted=false;
 // Global variables
@@ -35,9 +34,9 @@ typedef struct {
 } app_message_t;
 
 // --- Mount LittleFS ---
-static bool mount_littlefs() {
+esp_err_t mount_littlefs(void) {
     if (littlefs_mounted) {
-        return true;
+        return ESP_OK;
     }
 
     ESP_LOGI(TAG, "Mounting LittleFS...");
@@ -51,12 +50,12 @@ static bool mount_littlefs() {
     esp_err_t ret = esp_vfs_littlefs_register(&conf);
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to mount LittleFS: %s", esp_err_to_name(ret));
-        return false;
+        return ret;
     }
     
     littlefs_mounted = true;
     ESP_LOGI(TAG, "LittleFS mounted successfully");
-    return true;
+    return ESP_OK;
 }
 
 // --- MSC Event Callback ---
@@ -103,13 +102,13 @@ static bool copy_csv_to_lfs() {
     ESP_LOGI(TAG, "CSV copied to LittleFS");
 
     //For Password
-    FILE *src1 = fopen(USB_PASS_FILE, "r");
+    FILE *src1 = fopen(PASS_USB_FILE, "r");
     if (!src) {
         ESP_LOGE(TAG, "Failed to open USB file");
         return false;
     }
 
-    FILE *dst1 = fopen(SPIFFS_PASS_FILE, "w");
+    FILE *dst1 = fopen(PASS_FILE_PATH, "w");
     if (!dst) {
         ESP_LOGE(TAG, "Failed to create LFS file");
         fclose(src);
@@ -278,11 +277,11 @@ void usb_update_task(void *arg) {
     ESP_LOGI(TAG, "USB update task started");
 
     // MOUNT LITTLEFS FIRST - This was missing!
-    if (!mount_littlefs()) {
-        ESP_LOGE(TAG, "Failed to mount LittleFS, USB update disabled");
-        return;
-    }
-    
+    // if (!mount_littlefs()) {
+    //     ESP_LOGE(TAG, "Failed to mount LittleFS, USB update disabled");
+    //     return;
+    // }
+
     // Create event queue
     app_queue = xQueueCreate(5, sizeof(app_message_t));
 
@@ -291,7 +290,8 @@ void usb_update_task(void *arg) {
 
     // Try to load existing CSV from LittleFS
     load_owners_from_csv(LFS_FILE_PATH);
-    load_pass_from_txt(SPIFFS_PASS_FILE);
+    load_pass_from_txt(PASS_FILE_PATH);
+    // copy_log_to_usb();          //Called function from log_manager
     ESP_LOGI(TAG, "Waiting for USB device");
 
     msc_host_device_handle_t dev = NULL;
@@ -332,7 +332,8 @@ void usb_update_task(void *arg) {
             // Copy and load CSV
             if (copy_csv_to_lfs()) {
                 load_owners_from_csv(LFS_FILE_PATH);
-                load_pass_from_txt(SPIFFS_PASS_FILE);
+                load_pass_from_txt(PASS_FILE_PATH);
+                // copy_log_to_usb();     //Called function from log_manager
             }
         }
 

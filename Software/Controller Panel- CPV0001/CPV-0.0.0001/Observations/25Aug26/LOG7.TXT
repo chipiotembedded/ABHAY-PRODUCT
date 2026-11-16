@@ -1,0 +1,44 @@
+[1970-01-01 00:00:00] [0;32mI (371) Main: System initialization started[0m
+[1970-01-01 00:00:00] [0;32mI (431) gpio: GPIO[4]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (451) gpio: GPIO[5]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (601) gpio: GPIO[6]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (611) gpio: GPIO[7]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (641) gpio: GPIO[17]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (691) gpio: GPIO[18]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (721) ACTIVITY_LOG: LittleFS mounted[0m
+[1970-01-01 00:00:00] [0;33mW (771) LORA: Entering the receiver mode...[0m
+[1970-01-01 00:00:00] [0;32mI (811) LORA: LoRa set to continuous receive mode.[0m
+[1970-01-01 00:00:00] [0;32mI (1001) LORA_RECEIVE: LoRa Receiver Task Started[0m
+[1970-01-01 00:00:00] [0;32mI (781) Main: USB update task created successfully[0m
+[1970-01-01 00:00:00] [0;32mI (1181) Main: lcd_bl_timer task created successfully[0m
+[1970-01-01 00:00:00] [0;32mI (1211) Main: Starting application[0m
+[1970-01-01 00:00:05] [0;32mI (5371) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:05] [0;32mI (5491) main_task: Returned from app_main()[0m
+[1970-01-01 00:00:10] [0;32mI (10411) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:15] [0;32mI (15451) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:15] [0;32mI (15991) LORA_RECEIVE: Received raw: 44:1D:64:64:40:B8 (len=17)[0m
+[1970-01-01 00:00:15] [0;32mI (16031) LORA_RECEIVE: Parsed sender: 44:1D:64:64:40:B8[0m
+[1970-01-01 00:00:15] [0;32mI (16121) LORA_RECEIVE: Owner Found: HHHH, Flat A108[0m
+[1970-01-01 00:00:16] [0;32mI (16351) ACTIVITY_LOG: Log stored. Total: 14[0m
+[1970-01-01 00:00:16] [0;32mI (16381) LORA_RECEIVE: Received at: 08-09-25 12:00[0m
+[1970-01-01 00:00:16] [0;33mW (16421) LORA: Entering the receiver mode...[0m
+[1970-01-01 00:00:16] [0;32mI (16461) LORA: LoRa set to continuous receive mode.[0m
+[1970-01-01 00:00:16] [0;32mI (16501) LORA_RECEIVE: After lora_receive(): OP_MODE=0x85[0m
+[1970-01-01 00:00:20] [0;32mI (20541) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:25] [0;32mI (25591) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:30] [0;32mI (30641) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:35] [0;32mI (35691) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:40] [0;32mI (40741) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:45] [0;32mI (45791) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:50] [0;32mI (50841) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:55] [0;32mI (55891) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:01:00] [0;32mI (60941) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:01:05] [0;32mI (65991) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:01:10] [0;32mI (71071) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:01:15] [0;32mI (75321) USB_UPDATE: USB connected - installing device[0m
+[1970-01-01 00:01:15] [0;32mI (76121) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:01:16] [0;32mI (76611) USB_UPDATE: CSV copied to LittleFS[0m
+[1970-01-01 00:01:16] [0;32mI (76671) USB_UPDATE: Password file copied to LittleFS[0m
+[1970-01-01 00:01:16] [0;32mI (76721) PASSWORD: Password loaded[0m
+[1970-01-01 00:01:20] [0;32mI (81171) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:01:25] [0;32mI (85701) ACTIVITY_COPY: Activity log copied to USB successfully[0m

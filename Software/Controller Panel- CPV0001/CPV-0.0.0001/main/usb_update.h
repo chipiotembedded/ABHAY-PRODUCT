@@ -67,6 +67,7 @@ void show_owner_slide(int index);
 #include "lcd_i2c.h"
 #include "password.h"
 #include "lora_receive.h"
+#include "log_manager.h"
 
 // Configuration
 #define USB_FILE_PATH "/usb/test.csv"
@@ -82,5 +83,6 @@ void usb_update_task(void *arg);
 void load_owners_from_csv(const char *path);
 //void load_pass_from_txt(const char *path1);
 void show_owner_slide(int index);
+esp_err_t mount_littlefs(void);
 
 #endif // USB_UPDATE_H

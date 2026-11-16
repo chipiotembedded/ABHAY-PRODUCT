@@ -1,0 +1,49 @@
+[1970-01-01 00:00:00] [0;32mI (363) Main: System initialization started[0m
+[1970-01-01 00:00:00] [0;32mI (543) ACTIVITY_LOG: LittleFS mounted[0m
+[1970-01-01 00:00:00] [0;33mW (583) LORA: OpMode write: 0x80[0m
+[1970-01-01 00:00:00] [0;33mW (593) LORA: OpMode write: 0x81[0m
+[1970-01-01 00:00:00] [0;33mW (603) LORA: Entering the receiver mode...[0m
+[1970-01-01 00:00:00] [0;32mI (613) USB_UPDATE: USB update task started[0m
+[1970-01-01 00:00:00] [0;32mI (803) LORA: LoRa set to continuous receive mode.[0m
+[1970-01-01 00:00:00] [0;32mI (883) PASSWORD: Password loaded[0m
+[1970-01-01 00:00:00] [0;32mI (1053) Main: lcd_bl_timer task created successfully[0m
+[1970-01-01 00:00:00] [0;32mI (1123) Main: Starting application[0m
+[1970-01-01 00:00:05] [0;32mI (5323) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:05] [0;32mI (5393) main_task: Returned from app_main()[0m
+[1970-01-01 00:00:06] [0;33mW (6863) LORA: OpMode write: 0x81[0m
+[1970-01-01 00:00:06] [0;32mI (6903) LORA_RECEIVE: Received raw: 44:1D:64:42:DB:40 (len=17)[0m
+[1970-01-01 00:00:06] [0;32mI (6933) LORA_RECEIVE: Parsed sender: 44:1D:64:42:DB:40[0m
+[1970-01-01 00:00:06] [0;32mI (7013) LORA_RECEIVE: Owner Found: EEEE, Flat A105[0m
+[1970-01-01 00:00:06] [0;32mI (7083) ACTIVITY_LOG: Log stored. Total: 34[0m
+[1970-01-01 00:00:06] [0;32mI (7123) LORA_RECEIVE: Received at: 08-09-25 12:00[0m
+[1970-01-01 00:00:06] [0;33mW (7153) LORA: Entering the receiver mode...[0m
+[1970-01-01 00:00:06] [0;33mW (7193) LORA: OpMode write: 0x01[0m
+[1970-01-01 00:00:07] [0;33mW (7353) LORA: OpMode write: 0x85[0m
+[1970-01-01 00:00:07] [0;32mI (7383) LORA: LoRa set to continuous receive mode.[0m
+[1970-01-01 00:00:07] [0;32mI (7413) LORA_RECEIVE: After lora_receive(): OP_MODE=0x85[0m
+[1970-01-01 00:00:10] [0;32mI (10343) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:15] [0;32mI (15383) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:18] [0;33mW (19023) LORA: OpMode write: 0x81[0m
+[1970-01-01 00:00:18] [0;32mI (19063) LORA_RECEIVE: Received raw: 44:1D:64:42:DB:40 (len=17)[0m
+[1970-01-01 00:00:18] [0;32mI (19103) LORA_RECEIVE: Parsed sender: 44:1D:64:42:DB:40[0m
+[1970-01-01 00:00:19] [0;32mI (19203) LORA_RECEIVE: Owner Found: EEEE, Flat A105[0m
+[1970-01-01 00:00:19] [0;32mI (19283) ACTIVITY_LOG: Log stored. Total: 35[0m
+[1970-01-01 00:00:19] [0;32mI (19323) LORA_RECEIVE: Received at: 08-09-25 12:00[0m
+[1970-01-01 00:00:19] [0;33mW (19363) LORA: Entering the receiver mode...[0m
+[1970-01-01 00:00:19] [0;33mW (19413) LORA: OpMode write: 0x01[0m
+[1970-01-01 00:00:19] [0;33mW (19453) LORA: OpMode write: 0x85[0m
+[1970-01-01 00:00:19] [0;32mI (19633) LORA: LoRa set to continuous receive mode.[0m
+[1970-01-01 00:00:19] [0;32mI (19673) LORA_RECEIVE: After lora_receive(): OP_MODE=0x85[0m
+[1970-01-01 00:00:20] [0;32mI (20413) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:25] [0;32mI (25453) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:30] [0;32mI (30503) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:35] [0;32mI (35553) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:40] [0;32mI (40603) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:45] [0;32mI (45653) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:45] [0;32mI (46033) USB_UPDATE: USB connected - installing device[0m
+[1970-01-01 00:00:47] [0;32mI (47323) USB_UPDATE: CSV copied to LittleFS[0m
+[1970-01-01 00:00:47] [0;32mI (47393) USB_UPDATE: Password file copied to LittleFS[0m
+[1970-01-01 00:00:47] [0;32mI (47453) PASSWORD: Password loaded[0m
+[1970-01-01 00:00:50] [0;32mI (50723) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:55] [0;32mI (55773) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:57] [0;32mI (57523) ACTIVITY_COPY: Activity log copied to USB successfully[0m

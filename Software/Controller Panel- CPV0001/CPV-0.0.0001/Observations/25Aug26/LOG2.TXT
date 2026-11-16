@@ -1,0 +1,62 @@
+[1970-01-01 00:00:00] [0;32mI (371) Main: System initialization started[0m
+[1970-01-01 00:00:00] [0;32mI (431) gpio: GPIO[4]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (451) gpio: GPIO[5]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (461) gpio: GPIO[6]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (581) gpio: GPIO[7]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (621) gpio: GPIO[17]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (651) gpio: GPIO[18]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (681) ACTIVITY_LOG: LittleFS mounted[0m
+[1970-01-01 00:00:00] [0;32mI (731) gpio: GPIO[9]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (741) USB_UPDATE: USB update task started[0m
+[1970-01-01 00:00:00] [0;32mI (871) LORA_RECEIVE: LoRa Receiver Task Started[0m
+[1970-01-01 00:00:00] [0;32mI (741) Main: USB update task created successfully[0m
+[1970-01-01 00:00:00] [0;32mI (1201) Main: lcd_bl_timer task created successfully[0m
+[1970-01-01 00:00:01] [0;32mI (1231) Main: Starting application[0m
+[1970-01-01 00:00:05] [0;32mI (5361) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:05] [0;32mI (5491) main_task: Returned from app_main()[0m
+[1970-01-01 00:00:07] [0;32mI (7501) LORA_RECEIVE: Received raw: 44:1D:64:64:40:B8 (len=17)[0m
+[1970-01-01 00:00:07] [0;32mI (7541) LORA_RECEIVE: Parsed sender: 44:1D:64:64:40:B8[0m
+[1970-01-01 00:00:07] [0;32mI (7621) LORA_RECEIVE: Owner Found: HHHH, Flat A108[0m
+[1970-01-01 00:00:07] [0;32mI (7701) ACTIVITY_LOG: Log stored. Total: 81[0m
+[1970-01-01 00:00:07] [0;32mI (7731) LORA_RECEIVE: Received at: 08-09-25 12:00[0m
+[1970-01-01 00:00:07] [0;33mW (7771) LORA: Entering the receiver mode...[0m
+[1970-01-01 00:00:07] [0;32mI (7811) LORA: LoRa set to continuous receive mode.[0m
+[1970-01-01 00:00:07] [0;32mI (7851) LORA_RECEIVE: After lora_receive(): OP_MODE=0x85[0m
+[1970-01-01 00:00:10] [0;32mI (10401) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:14] [0;32mI (15141) LORA_RECEIVE: Received raw: 44:1D:64:64:40:B8 (len=17)[0m
+[1970-01-01 00:00:14] [0;32mI (15181) LORA_RECEIVE: Parsed sender: 44:1D:64:64:40:B8[0m
+[1970-01-01 00:00:15] [0;32mI (15271) LORA_RECEIVE: Owner Found: HHHH, Flat A108[0m
+[1970-01-01 00:00:15] [0;32mI (15351) ACTIVITY_LOG: Log stored. Total: 82[0m
+[1970-01-01 00:00:15] [0;32mI (15391) LORA_RECEIVE: Received at: 08-09-25 12:00[0m
+[1970-01-01 00:00:15] [0;33mW (15431) LORA: Entering the receiver mode...[0m
+[1970-01-01 00:00:15] [0;32mI (15471) LORA: LoRa set to continuous receive mode.[0m
+[1970-01-01 00:00:15] [0;32mI (15511) LORA_RECEIVE: After lora_receive(): OP_MODE=0x85[0m
+[1970-01-01 00:00:15] [0;32mI (15651) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:20] [0;32mI (20701) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:21] [0;32mI (21251) LORA_RECEIVE: Received raw: 44:1D:64:64:40:B8 (len=17)[0m
+[1970-01-01 00:00:21] [0;32mI (21301) LORA_RECEIVE: Parsed sender: 44:1D:64:64:40:B8[0m
+[1970-01-01 00:00:21] [0;32mI (21411) LORA_RECEIVE: Owner Found: HHHH, Flat A108[0m
+[1970-01-01 00:00:21] [0;32mI (21631) ACTIVITY_LOG: Log stored. Total: 83[0m
+[1970-01-01 00:00:21] [0;32mI (21671) LORA_RECEIVE: Received at: 08-09-25 12:00[0m
+[1970-01-01 00:00:21] [0;33mW (21711) LORA: Entering the receiver mode...[0m
+[1970-01-01 00:00:21] [0;32mI (21771) LORA: LoRa set to continuous receive mode.[0m
+[1970-01-01 00:00:21] [0;32mI (21811) LORA_RECEIVE: After lora_receive(): OP_MODE=0x85[0m
+[1970-01-01 00:00:25] [0;32mI (25771) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:27] [0;32mI (27221) LORA_RECEIVE: Received raw: 44:1D:64:64:40:B8 (len=17)[0m
+[1970-01-01 00:00:27] [0;32mI (27301) LORA_RECEIVE: Parsed sender: 44:1D:64:64:40:B8[0m
+[1970-01-01 00:00:27] [0;32mI (27381) LORA_RECEIVE: Owner Found: HHHH, Flat A108[0m
+[1970-01-01 00:00:27] [0;32mI (27451) ACTIVITY_LOG: Log stored. Total: 84[0m
+[1970-01-01 00:00:27] [0;32mI (27481) LORA_RECEIVE: Received at: 08-09-25 12:00[0m
+[1970-01-01 00:00:27] [0;33mW (27511) LORA: Entering the receiver mode...[0m
+[1970-01-01 00:00:27] [0;32mI (27541) LORA: LoRa set to continuous receive mode.[0m
+[1970-01-01 00:00:27] [0;32mI (27721) LORA_RECEIVE: After lora_receive(): OP_MODE=0x85[0m
+[1970-01-01 00:00:30] [0;32mI (30851) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:35] [0;32mI (35891) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:40] [0;32mI (40931) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:41] [0;32mI (41591) USB_UPDATE: USB connected - installing device[0m
+[1970-01-01 00:00:42] [0;32mI (42871) USB_UPDATE: CSV copied to LittleFS[0m
+[1970-01-01 00:00:42] [0;32mI (42921) USB_UPDATE: Password file copied to LittleFS[0m
+[1970-01-01 00:00:42] [0;32mI (42981) PASSWORD: Password loaded[0m
+[1970-01-01 00:00:45] [0;32mI (45971) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:50] [0;32mI (51011) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:50] [0;32mI (51201) ACTIVITY_COPY: Activity log copied to USB successfully[0m

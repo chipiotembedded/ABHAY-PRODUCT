@@ -26,7 +26,7 @@
 #include "screen_display.h"
 
 // ================== Hardware Pins ==================
-//#define BUZZER_PIN 9
+#define BUZZER_PIN 9
 #define MAX_OWNERS 100
 // ================== Flat Owner Info ==================
 typedef struct {
@@ -36,7 +36,7 @@ typedef struct {
 } FlatOwner;
 
 // ================== Globals ==================
-//extern bool shouldBeep;
+extern bool shouldBeep;
 // extern QueueHandle_t lora_rx_queue;
 
 // ================== Functions ==================

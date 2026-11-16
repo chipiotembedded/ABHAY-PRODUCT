@@ -22,10 +22,12 @@ bool password_verified = false;
 
 
 void app_main(void) {
+    mount_littlefs();
+    log_manager_init();
+    
     // Initialize all system components
     ESP_LOGI(TAG, "System initialization started");
     system_initialize();
-    receiver_start();
 
     // Create display queue
     display_queue = xQueueCreate(10, sizeof(StateID));
@@ -49,6 +51,17 @@ void app_main(void) {
         ESP_LOGE(TAG, "Failed to create USB update task");
     }else {
         ESP_LOGI(TAG, "USB update task created successfully");
+    }
+
+    // Create LCD queue
+    lcd_queue = xQueueCreate(20, sizeof(lcd_message_t));
+    if (lcd_queue == NULL) {
+        ESP_LOGE(TAG, "Failed to create LCD queue");
+        return;
+    }
+    if(xTaskCreate(lcd_task, "lcd_task", 8192, NULL, 8, NULL) != pdPASS) {
+        ESP_LOGE(TAG, "Failed to create LCD display task");
+        return;
     }
 
     if (xTaskCreate(lcd_backlight_timeout_task, "lcd_bl_timer", 2048, NULL, 5, NULL) != pdPASS) {

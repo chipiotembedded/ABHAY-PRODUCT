@@ -1,55 +1,87 @@
 ================================================================
-README - main8 (Changes vs main7)
+README - main9 (Changes vs main8)
 ================================================================
 
-Summary: Replaces NVS-based activity log storage with a flat file
-on LittleFS, and adds the ability to export the activity log to a
-USB drive via a new menu option.
+Summary: Adds a new "log_manager" module that captures all ESP_LOG
+output into a file (and can export it to USB), re-enables the
+silence button/buzzer functionality, and hardens the LoRa receive
+task with mutex-protected LCD access.
+
+Added files:
+  - log_manager.c/.h : new module. Hooks into ESP-IDF's logging
+    system via esp_log_set_vprintf() to write every log line (with a
+    timestamp) to "/littlefs/log.txt", and provides
+    copy_log_to_usb() to copy that file to a USB drive
+    ("/usb/log.txt"). log_manager_init() overwrites the log file on
+    every boot.
 
 Key changes by file:
 
 - activity_log.c/.h:
-    * MAJOR CHANGE: activity logging no longer uses NVS
-      (nvs_flash/blob storage with a mutex). Logs are now stored as
-      raw log_entry structs appended to a file at
-      ACTIVITY_FILE_PATH ("/littlefs/activity.txt").
-    * initialize_activity_log() no longer initializes NVS; it just
-      reads the current total_logs from the file's size.
-    * log_received_data() now fopen()'s the file in append mode and
-      fwrite()'s a log_entry struct directly, instead of writing to
-      an NVS blob. If total_logs exceeds MAX_LOGS, the log file is
-      cleared and the counter reset to 1 (simple circular-buffer
-      stand-in).
-    * get_total_logs() now computes total logs from file size /
-      sizeof(log_entry) instead of an NVS counter.
-    * read_log_entry() now seeks to the correct offset in the file
-      and reads the struct directly, instead of doing NVS blob
-      lookups with circular-buffer index math.
-    * Added clear_activity_logs(): truncates/overwrites the activity
-      log file.
-    * Added copy_activity_to_usb(): reads all log_entry records from
-      the LittleFS activity file and writes them out as
-      comma-separated text ("Name,Flat,Timestamp") to a file on the
-      USB drive (ACTIVITY_USB_FILE_PATH).
-    * nvs_mutex and NVS_NAMESPACE removed (no longer needed).
+    * clear_activity_logs() renamed/relocated: header comment cleanup
+      only (function itself carried over unchanged from main8 apart
+      from removing a dead trim_old_logs() draft).
 
-- button_handler.c:
-    * Added a new navigation path: from STATE_LEVEL2_MENU, pressing
-      button 2 now goes to the new STATE_SEND_TO_USB screen; from
-      STATE_SEND_TO_USB, the back button returns to STATE_LEVEL2_MENU.
+- button_handler.c/.h:
+    * Silence button support is FULLY RE-ENABLED: Silence_BUTTON is
+      back in the GPIO bit-mask, is_button_pressed() debounce helper
+      is restored, and handle_silence_button() is restored.
+    * button_task() again checks the silence button first
+      (unconditionally) and only polls the other 5 buttons while
+      !shouldBeep, matching the pre-main5 behavior but now built on
+      top of the is_button_pressed() debounce helper introduced in
+      main3/main7.
+    * STATE_SEND_TO_USB renamed to STATE_SEND_ACTLOG_TO_USB throughout
+      button handling.
+
+- lcd_i2c.c:
+    * Minor cleanup: removed now-unused `address` local variable in
+      i2c_lcd_set_cursor() (dead code left over from main4).
+
+- lora_receive.c/.h:
+    * shouldBeep and buzzer_control_task() are FULLY RE-ENABLED
+      (buzzer stack size increased to 4096).
+    * lora_receive_task is rewritten as a new, more defensive
+      implementation: safer null-termination, parses the sender via
+      strchr() for '|' instead of strtok(), validates the sender
+      isn't empty, and now protects LCD writes with lcd_mutex
+      (xSemaphoreTake/Give) when displaying the recognized owner.
+    * lora_receive_task stack size increased 4096 -> 8192.
+    * The old (main7-era) lora_receive_task implementation is kept
+      commented out for reference.
+
+- main.c:
+    * app_main() now calls mount_littlefs() and log_manager_init() at
+      startup, before system_initialize(). receiver_start() call
+      removed from main.c (moved into system_initialize(), see
+      system_init.c below).
+
+- password.h:
+    * Renamed USB_PASS_FILE -> PASS_USB_FILE and
+      SPIFFS_PASS_FILE -> PASS_FILE_PATH for clearer naming.
 
 - screen_display.c/.h:
-    * Added a new menu entry "Send ActLog" (STATE_SEND_TO_USB) to
-      level2_menu_items.
-    * STATE_ACTIVITY_LOG now calls get_total_logs() directly (file
-      size based) instead of going through the old NVS mutex/logic.
-    * Added handling for the new STATE_SEND_TO_USB state: calls
-      copy_activity_to_usb() and shows "Log Exported" or
-      "Export Failed" on the LCD accordingly.
-    * Added new STATE_SEND_TO_USB value to the StateID enum
-      (replacing the earlier speculative/commented STATE_LORA_PACKET
-      placeholder).
+    * STATE_SEND_TO_USB renamed to STATE_SEND_ACTLOG_TO_USB.
+    * Exporting the activity log to USB now also calls
+      copy_log_to_usb() (from the new log_manager module) in addition
+      to copy_activity_to_usb(), so both the activity log and the
+      general system log get exported together.
+    * The lcd_mutex take/give around show_screen() body was disabled
+      (commented out) in this version - screen updates are no longer
+      wrapped in the mutex here (mutex usage moved to be more
+      localized, e.g. inside lora_receive.c).
+    * display_task()'s old commented alternate implementation
+      removed.
 
-- usb_update.c:
-    * Minor: verbose per-row CSV parse logging commented out to
-      reduce log noise.
+- system_init.c/.h:
+    * system_initialize() now calls receiver_start() itself (moved
+      from main.c), and includes log_manager.h.
+
+- usb_update.c/.h:
+    * mount_littlefs() changed from `static bool` to public
+      `esp_err_t mount_littlefs(void)` so it can be called directly
+      from main.c.
+    * PASS_USB_FILE / PASS_FILE_PATH renaming applied here too.
+    * The internal "mount LittleFS first" safety check inside
+      usb_update_task() was commented out (now handled earlier in
+      main.c).

@@ -113,6 +113,9 @@ static long __frequency;
 void 
 lora_write_reg(int reg, int val)
 {
+   if (reg == REG_OP_MODE) {
+       ESP_LOGW("LORA", "OpMode write: 0x%02X", val);
+   }
    uint8_t out[2] = { 0x80 | reg, val };
    uint8_t in[2];
 

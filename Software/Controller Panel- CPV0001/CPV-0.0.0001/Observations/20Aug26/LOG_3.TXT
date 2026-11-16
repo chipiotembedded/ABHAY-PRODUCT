@@ -1,0 +1,29 @@
+[1970-01-01 00:00:00] [0;32mI (371) Main: System initialization started[0m
+[1970-01-01 00:00:00] [0;32mI (431) gpio: GPIO[4]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (451) gpio: GPIO[5]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (461) gpio: GPIO[6]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (581) gpio: GPIO[7]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (621) gpio: GPIO[17]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (651) gpio: GPIO[18]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (681) ACTIVITY_LOG: LittleFS mounted[0m
+[1970-01-01 00:00:00] [0;32mI (751) gpio: GPIO[9]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[1970-01-01 00:00:00] [0;32mI (761) USB_UPDATE: USB update task started[0m
+[1970-01-01 00:00:00] [0;32mI (891) LORA_RECEIVE: LoRa Receiver Task Started[0m
+[1970-01-01 00:00:00] [0;32mI (761) Main: USB update task created successfully[0m
+[1970-01-01 00:00:01] [0;32mI (1221) Main: lcd_bl_timer task created successfully[0m
+[1970-01-01 00:00:01] [0;32mI (1251) Main: Starting application[0m
+[1970-01-01 00:00:05] [0;32mI (5381) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:05] [0;32mI (5511) main_task: Returned from app_main()[0m
+[1970-01-01 00:00:10] [0;32mI (10421) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:15] [0;32mI (15461) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:20] [0;32mI (20501) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:25] [0;32mI (25541) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:30] [0;32mI (30581) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:35] [0;32mI (35621) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:39] [0;32mI (40011) USB_UPDATE: USB connected - installing device[0m
+[1970-01-01 00:00:40] [0;32mI (40661) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:41] [0;32mI (41411) USB_UPDATE: CSV copied to LittleFS[0m
+[1970-01-01 00:00:41] [0;32mI (41451) USB_UPDATE: Password file copied to LittleFS[0m
+[1970-01-01 00:00:41] [0;32mI (41511) PASSWORD: Password loaded[0m
+[1970-01-01 00:00:45] [0;32mI (45701) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[1970-01-01 00:00:49] [0;32mI (49691) ACTIVITY_COPY: Activity log copied to USB successfully[0m

@@ -8,8 +8,8 @@
 #include "esp_err.h"
 
 #define PASSWORD_LENGTH 4
-#define USB_PASS_FILE "/usb/password.txt"
-#define SPIFFS_PASS_FILE "/littlefs/password.txt"
+#define PASS_USB_FILE "/usb/password.txt"
+#define PASS_FILE_PATH "/littlefs/password.txt"
 
 extern int correct_password[PASSWORD_LENGTH];
 extern int entered_password[PASSWORD_LENGTH];

@@ -8,6 +8,7 @@
 #include "activity_log.h"
 #include "usb_update.h"
 #include "button_handler.h"
+#include "log_manager.h"
 
 /**
  * @brief Initializes all system components

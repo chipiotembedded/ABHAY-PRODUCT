@@ -1,22 +1,10 @@
 #include "screen_display.h"
 static const char *TAG = "SCREEN_DISPLAY";
-// static FlatOwner current_received;
 
 StateID current_state = STATE_BOOT;
 
-/*
-void request_screen(StateID state) {
-    if (state < STATE_COUNT) {
-        current_state = state;
-        show_screen(state);
-    }
-}
-*/
 void request_screen(StateID state)
 {
-    // if (state >= STATE_COUNT) return;
-    // /* Prevent unnecessary redraw */
-    // if (current_state == state) return;
     current_state = state;
     show_screen(state);
 }
@@ -33,7 +21,7 @@ const MenuItem level1_menu_items[] = {
 
 const MenuItem level2_menu_items[] = {
     {STATE_FLAT_OWNER, "Flat Owners"},
-    {STATE_SEND_TO_USB, "Send ActLog"},
+    {STATE_SEND_ACTLOG_TO_USB, "Send ActLog"},
 };
 
 void display_task(void *arg)
@@ -59,15 +47,25 @@ void display_task(void *arg)
     }
 }
 
+// void display_task(void *arg) {
+//     StateID id;
+//     while (1) {
+//         if (xQueueReceive(display_queue, &id, portMAX_DELAY)) {
+//             current_state = id;
+//             show_screen(id);  // ✅ Add this line to reflect on LCD
+//         }
+//     }
+// }
+
 void show_screen(StateID state) {
     /* HARD GUARD: mutex must exist */
-    if (lcd_mutex == NULL) {
-        ESP_LOGE(TAG, "lcd_mutex NULL");
-        return;
-    }
+    // if (lcd_mutex == NULL) {
+    //     ESP_LOGE(TAG, "lcd_mutex NULL");
+    //     return;
+    // }
 
     /* BLOCK until LCD is free */
-    xSemaphoreTake(lcd_mutex, portMAX_DELAY);
+    // xSemaphoreTake(lcd_mutex, portMAX_DELAY);
 
     i2c_lcd_clear();
     
@@ -104,23 +102,6 @@ void show_screen(StateID state) {
         case STATE_LEVEL2_MENU:
             show_menu(level2_menu_items, sizeof(level2_menu_items)/sizeof(MenuItem));
             break;
-
-        // case STATE_ACTIVITY_LOG:
-        //     debug_print_all_logs();
-        //     if (xSemaphoreTake(nvs_mutex, portMAX_DELAY) == pdTRUE) {
-        //         total_logs = get_total_logs();
-        //         if (total_logs > 0) {
-        //             current_log_index = 0;
-        //             display_log_entry(current_log_index);
-        //         } else {
-        //             i2c_lcd_set_cursor(0, 0);
-        //             i2c_lcd_send_string("No activity logs");
-        //             i2c_lcd_set_cursor(1, 0);
-        //             i2c_lcd_send_string("available");
-        //         }
-        //         xSemaphoreGive(nvs_mutex);
-        //     }
-        //     break;
 
         case STATE_ACTIVITY_LOG: {
             total_logs = get_total_logs();   // Directly read from file
@@ -164,8 +145,8 @@ void show_screen(StateID state) {
             i2c_lcd_send_string(line);
             break;
 
-        case STATE_SEND_TO_USB:
-            if (copy_activity_to_usb() == ESP_OK) {
+        case STATE_SEND_ACTLOG_TO_USB:
+            if (copy_activity_to_usb() == ESP_OK && copy_log_to_usb() == ESP_OK) {
                 i2c_lcd_clear();
                 i2c_lcd_set_cursor(0,0);
                 i2c_lcd_send_string("Log Exported");
@@ -181,23 +162,8 @@ void show_screen(StateID state) {
             i2c_lcd_send_string("Invalid State");
             break;
     }
-    xSemaphoreGive(lcd_mutex);
+    // xSemaphoreGive(lcd_mutex);
 }
-
-/*
-void show_menu(const MenuItem *menu, size_t count) {
-    i2c_lcd_clear();
-    i2c_lcd_set_cursor(0, 0);
-    i2c_lcd_send_string("Menu");
-    
-    for(int i = 0; i < count && i < 3; i++) {
-        i2c_lcd_set_cursor(i + 1, 0);
-        char line[20];
-        snprintf(line, sizeof(line), "%d. %s", i + 1, menu[i].name);
-        i2c_lcd_send_string(line);
-    }
-}
-*/
 
 void show_menu(const MenuItem *menu, size_t count)
 {
