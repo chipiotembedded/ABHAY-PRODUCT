@@ -8,5 +8,5 @@ void system_initialize() {
 
     load_owners_from_csv();
     load_pass_from_txt();
-    //load_wifi_cred_from_txt();
+    load_wifi_cred_from_txt();
 }

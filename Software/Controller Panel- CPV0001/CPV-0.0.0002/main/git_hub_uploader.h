@@ -13,8 +13,10 @@
 #include "log_manager.h"
 #include "esp_err.h"
 #include "lcd_i2c.h"
+#include "activity_log.h"
 
 esp_err_t github_uploader_init(void);
 esp_err_t github_upload_log(void);
+esp_err_t github_upload_activity_log(void);
 
 #endif // GITHUB_UPLOADER_H

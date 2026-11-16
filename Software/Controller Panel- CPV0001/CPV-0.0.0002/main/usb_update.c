@@ -102,7 +102,7 @@ static bool copy_csv_to_lfs() {
     ESP_LOGI(TAG, "CSV copied to LittleFS");
 
     load_pass_from_usb_to_flash();
-    //load_wifi_cred_from_usb_to_flash();
+    load_wifi_cred_from_usb_to_flash();
 
     return true;
 }
@@ -306,7 +306,7 @@ void usb_update_task(void *arg) {
             if (copy_csv_to_lfs()) {
                 load_owners_from_csv();
                 load_pass_from_txt();
-                //load_wifi_cred_from_txt();
+                load_wifi_cred_from_txt();
             }
         }
 

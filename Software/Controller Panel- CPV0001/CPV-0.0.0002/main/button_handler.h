@@ -18,7 +18,7 @@
 #include "driver/gpio.h"
 #include "usb_update.h"
 #include "password.h"
-
+#include "esp_task_wdt.h"
 
 extern const TickType_t button_debounce_delay;
 
@@ -30,7 +30,7 @@ void handle_button2_action();
 void handle_back_button_action();
 void handle_up_button_action();
 void handle_next_button_action();
-void handle_silence_button(void);
+// void handle_silence_button(void);
 //void display_log_entry(int index);
 
 #endif

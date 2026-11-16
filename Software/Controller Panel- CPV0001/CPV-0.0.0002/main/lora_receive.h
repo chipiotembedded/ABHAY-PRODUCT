@@ -16,6 +16,7 @@
 #include "esp_vfs.h"
 #include "esp_littlefs.h"
 #include "esp_timer.h"   // for esp_timer_get_time()
+#include "esp_task_wdt.h"
 
 #include "lora.h"
 #include "lcd_i2c.h"
@@ -24,6 +25,7 @@
 #include "button_handler.h"
 #include "rtc.h"
 #include "screen_display.h"
+#include "esp_task_wdt.h"
 
 // ================== Hardware Pins ==================
 #define BUZZER_PIN 9

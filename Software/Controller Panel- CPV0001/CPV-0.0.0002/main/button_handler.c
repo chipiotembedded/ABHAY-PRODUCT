@@ -1,8 +1,8 @@
 #include "button_handler.h"
 
 //const TickType_t button_debounce_delay = pdMS_TO_TICKS(0);
-#define DEBOUNCE_DELAY_MS   50
-#define POST_PRESS_DELAY_MS 130
+#define DEBOUNCE_DELAY_MS   40
+#define POST_PRESS_DELAY_MS 100
 
 void reset_password_input(void) {
     memset(entered_password, 0, sizeof(entered_password));
@@ -154,9 +154,17 @@ void handle_next_button_action() {
             } else {
                 memset(entered_password, 0, sizeof(entered_password));
                 reset_password_input();
-                i2c_lcd_clear();
-                i2c_lcd_set_cursor(1, 2);
-                i2c_lcd_send_string("Wrong Password");
+                // i2c_lcd_clear();
+                // i2c_lcd_set_cursor(1, 2);
+                // i2c_lcd_send_string("Wrong Password");
+                // vTaskDelay(pdMS_TO_TICKS(1500));
+
+                if (xSemaphoreTake(lcd_mutex, pdMS_TO_TICKS(20))) {
+                    i2c_lcd_clear();
+                    i2c_lcd_set_cursor(1, 2);
+                    i2c_lcd_send_string("Wrong Password");
+                    xSemaphoreGive(lcd_mutex);
+                }
                 vTaskDelay(pdMS_TO_TICKS(1500));
                 request_screen(STATE_PASSWORD);                
             }
@@ -202,14 +210,12 @@ void button_task(void *arg) {
             if (is_button_pressed(BUTTON_1)) {
                 lcd_register_activity();
                 handle_button1_action();
-                
             }
 
             // BUTTON 2
             if (is_button_pressed(BUTTON_2)) {
                 lcd_register_activity();
                 handle_button2_action();
-                
             }
 
             // BUTTON BACK
@@ -220,14 +226,14 @@ void button_task(void *arg) {
 
             // BUTTON UP
             if (is_button_pressed(BUTTON_UP)) {
-                    lcd_register_activity();
-                    handle_up_button_action();
+                lcd_register_activity();
+                handle_up_button_action();
             }
 
             // BUTTON NEXT
             if (is_button_pressed(BUTTON_NEXT)) {
-                    lcd_register_activity();
-                    handle_next_button_action();
+                lcd_register_activity();
+                handle_next_button_action();
             }
             vTaskDelay(pdMS_TO_TICKS(POST_PRESS_DELAY_MS));
         } 

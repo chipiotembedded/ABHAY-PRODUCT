@@ -18,8 +18,6 @@
 #define BUF_SIZE     1024
 
 void log_manager_init(void);
-// void log_check_timeout_task(void *pvParameters);
-// void print_log_file(void);
 esp_err_t copy_log_to_usb(void);
 
 #endif

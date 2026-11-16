@@ -133,7 +133,7 @@ void i2c_lcd_send_string(const char *str) {
 // Clear display
 void i2c_lcd_clear(void) {
     i2c_lcd_send_cmd(0x01);
-    vTaskDelay(pdMS_TO_TICKS(10));
+    vTaskDelay(pdMS_TO_TICKS(5));
 }
 
 // Clear display with mutex
@@ -172,7 +172,7 @@ void i2c_lcd_write_char(char c) {
 volatile uint32_t lcd_last_activity = 0;
 bool lcd_backlight_is_on = true;
 
-#define LCD_INACTIVITY_TIMEOUT_MS  10000   // 10 seconds
+#define LCD_INACTIVITY_TIMEOUT_MS  60000   // 10 seconds
 
 void lcd_backlight_timeout_task(void *arg)
 {

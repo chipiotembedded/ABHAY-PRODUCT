@@ -37,7 +37,7 @@ void log_received_data(bool buttonPressed, const char *ownerName, const char *fl
 int get_total_logs();
 int read_log_entry(int index, log_entry *entry);
 void display_log_entry(int index);
-void trim_old_logs();
+void clear_activity_logs(void);
 void debug_print_all_logs();
 esp_err_t copy_activity_to_usb(void);
 

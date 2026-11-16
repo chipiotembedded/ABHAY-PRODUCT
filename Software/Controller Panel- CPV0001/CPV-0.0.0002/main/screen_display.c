@@ -12,13 +12,26 @@ void request_screen(StateID state) {
     }
 }
 */
+// void request_screen(StateID state)
+// {
+//     current_state = state;
+//     show_screen(state);
+// }
+
 void request_screen(StateID state)
 {
-    // if (state >= STATE_COUNT) return;
-    // /* Prevent unnecessary redraw */
-    // if (current_state == state) return;
-    current_state = state;
-    show_screen(state);
+    if (display_queue != NULL) {
+        // Send to queue, don't call directly
+        xQueueSend(display_queue, &state, pdMS_TO_TICKS(100));
+    } else {
+        // Fallback if queue not ready (only during initialization)
+        current_state = state;
+        if (lcd_mutex) {
+            xSemaphoreTake(lcd_mutex, portMAX_DELAY);
+            show_screen(state);
+            xSemaphoreGive(lcd_mutex);
+        }
+    }
 }
 
 const MenuItem main_menu_items[] = {
@@ -61,17 +74,7 @@ void display_task(void *arg)
 }
 
 void show_screen(StateID state) {
-    /* HARD GUARD: mutex must exist */
-    // if (lcd_mutex == NULL) {
-    //     ESP_LOGE(TAG, "lcd_mutex NULL");
-    //     return;
-    // }
-
-    // /* BLOCK until LCD is free */
-    // xSemaphoreTake(lcd_mutex, portMAX_DELAY);
-
     i2c_lcd_clear();
-    
     switch(state) {
         case STATE_BOOT:
             i2c_lcd_set_cursor(0, 3);
@@ -133,6 +136,7 @@ void show_screen(StateID state) {
             break;
 
         case STATE_PASSWORD:
+            vTaskDelay(pdMS_TO_TICKS(50));
             i2c_lcd_set_cursor(0, 3);
             i2c_lcd_send_string("Enter PIN:");
 
@@ -148,20 +152,8 @@ void show_screen(StateID state) {
             i2c_lcd_send_string(line);
             break;
 
-        case STATE_SEND_ACTLOG_TO_USB:
-            if (copy_activity_to_usb() == ESP_OK && copy_log_to_usb() == ESP_OK && github_upload_log() == ESP_OK) {
-                i2c_lcd_clear();
-                i2c_lcd_set_cursor(0,0);
-                i2c_lcd_send_string("Log Exported");
-            } else {
-                i2c_lcd_clear();
-                i2c_lcd_set_cursor(0,0);
-                i2c_lcd_send_string("Export Failed");
-            }
-            break;
-
-        // case STATE_SEND_LOG_TO_USB:
-        //     if (copy_log_to_usb() == ESP_OK) {
+        // case STATE_SEND_ACTLOG_TO_USB:
+        //     if (copy_activity_to_usb() == ESP_OK && copy_log_to_usb() == ESP_OK && github_upload_log() == ESP_OK) {
         //         i2c_lcd_clear();
         //         i2c_lcd_set_cursor(0,0);
         //         i2c_lcd_send_string("Log Exported");
@@ -170,13 +162,52 @@ void show_screen(StateID state) {
         //         i2c_lcd_set_cursor(0,0);
         //         i2c_lcd_send_string("Export Failed");
         //     }
-        //     break; 
+        //     break;
+
+        case STATE_SEND_ACTLOG_TO_USB: {
+            /*
+             * This state is intentionally handled OUTSIDE lcd_mutex in
+             * display_task() above.  All LCD calls here use lcd_safe_*
+             * to avoid dead-locks.
+             */
+            // {
+            //     const char *lines[] = {"Exporting...", NULL, NULL, NULL};
+
+            //     i2c_lcd_send_string("Exporting...");
+            // }
+
+            i2c_lcd_clear();
+            i2c_lcd_set_cursor(0,3);
+            i2c_lcd_send_string("Exporting");
+
+            bool ok_act = (copy_activity_to_usb() == ESP_OK);
+            bool ok_log = (copy_log_to_usb()      == ESP_OK);
+            bool ok_git = (github_upload_log()    == ESP_OK);
+            bool ok_act_git = (github_upload_activity_log()    == ESP_OK);
+
+            i2c_lcd_clear();
+            if (ok_act && ok_log && ok_git && ok_act_git) {
+                //const char *lines[] = {"Export OK", "Git: OK", NULL, NULL};
+                i2c_lcd_set_cursor(3,0);
+                i2c_lcd_send_string("Export OK  Git: OK");
+            } else {
+                // char fail[17] = {0};
+                // snprintf(fail, sizeof(fail), "A:%d L:%d G:%d AG:%d",
+                //          ok_act, ok_log, ok_git, ok_act_git);
+                // const char *lines[] = {"Export PARTIAL", fail, NULL, NULL};
+                i2c_lcd_set_cursor(3,0);
+                i2c_lcd_send_string("failed");
+            }
+            vTaskDelay(pdMS_TO_TICKS(100));
+            break;
+        } 
 
         default:
             i2c_lcd_set_cursor(0, 0);
             i2c_lcd_send_string("Invalid State");
             break;
     }
+    //xSemaphoreGive(lcd_mutex);
 }
 
 /*

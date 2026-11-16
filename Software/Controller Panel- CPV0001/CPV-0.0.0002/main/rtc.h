@@ -33,6 +33,7 @@
 
 #include <stdbool.h>
 #include <time.h>
+#include "lcd_i2c.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -387,11 +387,12 @@ return ESP_OK;
 #define GITHUB_USERNAME   "chipiotembedded"
 #define GITHUB_REPO       "Abhay"
 #define GITHUB_TOKEN "<SET_YOUR_TOKEN_HERE>"
+
 static const char *TAG = "GITHUB_UPLOADER";
 
-/**
- * @brief Initialize uploader module
- */
+
+//@brief Initialize uploader module//
+
 esp_err_t github_uploader_init(void)
 {
     ESP_LOGI(TAG, "GitHub uploader initialized");
@@ -400,12 +401,7 @@ esp_err_t github_uploader_init(void)
 
 esp_err_t github_upload_log(void)
 {
-    ESP_LOGI(TAG, "Starting Base64 test...");
-
-    // LCD string
-    i2c_lcd_clear();
-    i2c_lcd_set_cursor(0,0);
-    i2c_lcd_send_string("Sending to Git");    
+    ESP_LOGI(TAG, "Starting Base64 test...");    
 
     // Now generate correct timestamp
     time_t now;
@@ -415,7 +411,7 @@ esp_err_t github_upload_log(void)
     ESP_LOGI("TIME", "Year now = %d", timeinfo.tm_year + 1900);
     ESP_LOGI("TIME", "Hour now = %d", timeinfo.tm_hour);
     char filename[64];
-    strftime(filename, sizeof(filename), "%Y-%m-%d_%H-%M-%S.txt", &timeinfo);
+    strftime(filename, sizeof(filename), "(Log)%Y-%m-%d_%H:%M.txt", &timeinfo);
 
     ESP_LOGI(TAG, "Uploading as: %s", filename);
 
@@ -551,3 +547,154 @@ return ESP_OK;
 
 }
 
+///
+///Activity Log upload to git///
+///
+
+esp_err_t github_upload_activity_log(void)
+{
+    ESP_LOGI(TAG, "Starting Base64 test...");   
+
+    // Now generate correct timestamp
+    time_t now;
+    struct tm timeinfo;
+    time(&now);
+    localtime_r(&now, &timeinfo);
+    ESP_LOGI("TIME", "Year now = %d", timeinfo.tm_year + 1900);
+    ESP_LOGI("TIME", "Hour now = %d", timeinfo.tm_hour);
+    char filename[64];
+    strftime(filename, sizeof(filename), "(Activity_Log)%Y-%m-%d_%H:%M.txt", &timeinfo);
+
+    ESP_LOGI(TAG, "Uploading as: %s", filename);
+
+    FILE *f = fopen(ACTIVITY_FILE_PATH, "r");
+    if (!f) {
+        ESP_LOGE(TAG, "Failed to open log file");
+        return ESP_FAIL;
+    }
+
+    fseek(f, 0, SEEK_END);
+    long file_size = ftell(f);
+    rewind(f);
+
+    if (file_size <= 0) {
+        ESP_LOGW(TAG, "Activity Log file empty");
+        fclose(f);
+        return ESP_FAIL;
+    }
+
+    ESP_LOGI(TAG, "File size: %ld bytes", file_size);
+
+    char *buffer = malloc(file_size);
+    fread(buffer, 1, file_size, f);
+    fclose(f);
+
+    // --- BASE64 ENCODING USING MBEDTLS ---
+                       
+size_t encoded_len = 0;
+
+// First call to get required length
+mbedtls_base64_encode(NULL, 0, &encoded_len,
+                      (unsigned char*)buffer, file_size);
+
+char *base64_output = malloc(encoded_len + 1);
+if (!base64_output) {
+    ESP_LOGE(TAG, "Base64 malloc failed");
+    free(buffer);
+    return ESP_ERR_NO_MEM;
+}
+
+// Actual encoding
+int ret = mbedtls_base64_encode((unsigned char*)base64_output,
+                                encoded_len,
+                                &encoded_len,
+                                (unsigned char*)buffer,
+                                file_size);
+
+if (ret != 0) {
+    ESP_LOGE(TAG, "Base64 encoding failed");
+    free(buffer);
+    free(base64_output);
+    return ESP_FAIL;
+}
+
+base64_output[encoded_len] = '\0';
+
+ESP_LOGI(TAG, "Base64 size: %lu bytes", (unsigned long)encoded_len);
+ESP_LOGI(TAG, "Base64 preview: %.100s", base64_output);
+
+// ---- CREATE JSON BODY ----
+
+const char *commit_message = "ESP32 log upload";
+
+size_t json_size = strlen(base64_output) + 200;
+
+char *json_body = malloc(json_size);
+if (!json_body) {
+    ESP_LOGE(TAG, "JSON malloc failed");
+    free(buffer);
+    free(base64_output);
+    return ESP_ERR_NO_MEM;
+}
+
+snprintf(json_body, json_size,
+         "{"
+         "\"message\":\"%s\","
+         "\"content\":\"%s\""
+         "}",
+         commit_message,
+         base64_output);
+
+ESP_LOGI(TAG, "JSON size: %lu", (unsigned long)strlen(json_body));
+ESP_LOGI(TAG, "JSON preview: %.150s", json_body);
+
+/*===================== github upload ========================*/
+ESP_LOGI(TAG, "Uploading to GitHub...");
+
+// Build GitHub URL
+char url[256];
+snprintf(url, sizeof(url),
+         "https://api.github.com/repos/%s/%s/contents/%s",
+         GITHUB_USERNAME,
+         GITHUB_REPO,
+         filename);
+
+ESP_LOGI(TAG, "URL: %s", url);
+
+esp_http_client_config_t config = {
+    .url = url,
+    .method = HTTP_METHOD_PUT,
+    .timeout_ms = 20000,
+    .crt_bundle_attach = esp_crt_bundle_attach,
+};
+
+esp_http_client_handle_t client = esp_http_client_init(&config);
+
+// Required headers for GitHub
+esp_http_client_set_header(client, "Authorization", "Bearer " GITHUB_TOKEN);
+esp_http_client_set_header(client, "User-Agent", "ESP32");
+esp_http_client_set_header(client, "Content-Type", "application/json");
+
+esp_http_client_set_post_field(client, json_body, strlen(json_body));
+
+esp_err_t err = esp_http_client_perform(client);
+
+
+/*============== upload check =================*/
+if (err == ESP_OK) {
+    int status = esp_http_client_get_status_code(client);
+    ESP_LOGI(TAG, "GitHub Status = %d", status);
+} else {
+    ESP_LOGE(TAG, "GitHub upload failed: %s", esp_err_to_name(err));
+}
+
+esp_http_client_cleanup(client);
+
+
+free(buffer);
+free(base64_output);
+free(json_body);
+
+return ESP_OK;
+
+}

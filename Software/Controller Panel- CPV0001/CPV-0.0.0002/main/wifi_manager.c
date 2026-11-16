@@ -3,11 +3,11 @@
 static const char *TAG = "WIFI_MANAGER";
 
 // WIFI CREDENTIALS //
-#define WIFI_SSID      "Paras 2.4"
-#define WIFI_PASSWORD  "9890090011"  
+// #define WIFI_SSID      "Paras 2.4"
+// #define WIFI_PASSWORD  "9890090011"
 
-// char ssid[32];
-// char password[64];
+char ssid[32];
+char password[64];
 
 #define WIFI_CONNECTED_BIT BIT0
 #define WIFI_FAIL_BIT      BIT1
@@ -20,7 +20,7 @@ static bool s_is_connected = false;
 
 // Event Handler             //
 
-static void wifi_event_handler(void *arg, 
+static void wifi_event_handler(void *arg,
                                esp_event_base_t event_base,
                                int32_t event_id,
                                void *event_data)
@@ -45,6 +45,10 @@ static void wifi_event_handler(void *arg,
         {
             xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);
             ESP_LOGE(TAG, "Failed to connect to WiFi");
+
+            // i2c_lcd_clear();
+            // i2c_lcd_set_cursor(0,0);
+            // i2c_lcd_send_string("WiFi failed");
         }
         s_is_connected = false;
     }
@@ -57,18 +61,20 @@ static void wifi_event_handler(void *arg,
         s_retry_num = 0;
         s_is_connected = true;
 
+        vTaskDelay(pdMS_TO_TICKS(2000));
+
         xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
     }
 }
 
 
 // Public Functions          //
-
+/*
 esp_err_t wifi_manager_init(void)
 {
     esp_err_t ret;
 
-    /* Initialize NVS */
+    // Initialize NVS //
     ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES ||
         ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
@@ -78,32 +84,32 @@ esp_err_t wifi_manager_init(void)
     }
     ESP_ERROR_CHECK(ret);
 
-    /* Create event group */
+    // Create event group //
     s_wifi_event_group = xEventGroupCreate();
 
-    /* Initialize TCP/IP stack */
+    // Initialize TCP/IP stack //
     ESP_ERROR_CHECK(esp_netif_init());
 
-    /* Create default event loop */
+    // Create default event loop //
     ESP_ERROR_CHECK(esp_event_loop_create_default());
 
-    /* Create default WiFi station */
+    // Create default WiFi station //
     esp_netif_create_default_wifi_sta();
 
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
 
-    // static esp_event_handler_instance_t instance_any_id;
-    // static esp_event_handler_instance_t instance_got_ip;
+    static esp_event_handler_instance_t instance_any_id;
+    static esp_event_handler_instance_t instance_got_ip;
 
-    /* Register event handlers */
+    // Register event handlers //
     ESP_ERROR_CHECK(
         esp_event_handler_instance_register(
             WIFI_EVENT,
             ESP_EVENT_ANY_ID,
             &wifi_event_handler,
             NULL,
-            NULL));
+            &instance_any_id));
 
     ESP_ERROR_CHECK(
         esp_event_handler_instance_register(
@@ -111,30 +117,47 @@ esp_err_t wifi_manager_init(void)
             IP_EVENT_STA_GOT_IP,
             &wifi_event_handler,
             NULL,
-            NULL));
+             &instance_got_ip));
 
-    wifi_config_t wifi_config = {
-        .sta = {
-            .ssid = WIFI_SSID,
-            .password = WIFI_PASSWORD,
-            .threshold.authmode = WIFI_AUTH_WPA2_PSK,
-        },
-    };
+    // wifi_config_t wifi_config = {
+    //     .sta = {
+    //         .ssid = WIFI_SSID,
+    //         .password = WIFI_PASSWORD,
+    //         .threshold.authmode = WIFI_AUTH_WPA2_PSK,
+    //     },
+    // };
 
-    // Load credentials first
-    //ESP_ERROR_CHECK(load_wifi_cred_from_txt());
+    // Load credentials first    
+    wifi_config_t wifi_config = {0};
+
+    if (load_wifi_cred_from_txt() == ESP_OK) {
+
+        strlcpy((char *)wifi_config.sta.ssid,
+                ssid,
+                sizeof(wifi_config.sta.ssid));
+
+        strlcpy((char *)wifi_config.sta.password,
+                password,
+                sizeof(wifi_config.sta.password));
+
+    }
+    else {
+        ESP_LOGW(TAG, "Using fallback credentials");
+
+        strlcpy((char *)wifi_config.sta.ssid,
+                "FallbackSSID",
+                sizeof(wifi_config.sta.ssid));
+
+        strlcpy((char *)wifi_config.sta.password,
+                "FallbackPASS",
+                sizeof(wifi_config.sta.password));
+    }
     
-    // wifi_config_t wifi_config = {0};
+    wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
 
-    // if (load_wifi_cred_from_txt() != ESP_OK) {
-    //     ESP_LOGE(TAG, "Using fallback credentials");
-
-    //     strlcpy((char *)wifi_config.sta.ssid, ssid, sizeof(wifi_config.sta.ssid));
-    //     strlcpy((char *)wifi_config.sta.password, password, sizeof(wifi_config.sta.password));
-    // }
-    
-    // wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
-
+    wifi_config.sta.pmf_cfg.capable = true;
+    wifi_config.sta.pmf_cfg.required = false;
+    //wifi_config.sta.failure_retry_cnt = 5;
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
     ESP_ERROR_CHECK(esp_wifi_start());
@@ -143,6 +166,98 @@ esp_err_t wifi_manager_init(void)
 
     return ESP_OK;
 }
+*/
+
+esp_err_t wifi_manager_init(void)
+{
+    esp_err_t ret;
+
+    /* -------------------- NVS -------------------- */
+    ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES ||
+        ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
+    {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(ret);
+
+    /* -------------------- Event Group -------------------- */
+    s_wifi_event_group = xEventGroupCreate();
+    if (s_wifi_event_group == NULL) {
+        ESP_LOGE(TAG, "Failed to create event group");
+        return ESP_FAIL;
+    }
+
+    /* -------------------- Network Stack -------------------- */
+    ESP_ERROR_CHECK(esp_netif_init());
+    ESP_ERROR_CHECK(esp_event_loop_create_default());
+    esp_netif_create_default_wifi_sta();
+
+    /* -------------------- WiFi Init -------------------- */
+    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+
+    /* -------------------- Event Handlers -------------------- */
+    ESP_ERROR_CHECK(
+        esp_event_handler_register(
+            WIFI_EVENT,
+            ESP_EVENT_ANY_ID,
+            &wifi_event_handler,
+            NULL));
+
+    ESP_ERROR_CHECK(
+        esp_event_handler_register(
+            IP_EVENT,
+            IP_EVENT_STA_GOT_IP,
+            &wifi_event_handler,
+            NULL));
+
+    /* -------------------- Load Credentials -------------------- */
+    wifi_config_t wifi_config = {0};
+
+    if (load_wifi_cred_from_txt() == ESP_OK)
+    {
+        strlcpy((char *)wifi_config.sta.ssid,
+                ssid,
+                sizeof(wifi_config.sta.ssid));
+
+        strlcpy((char *)wifi_config.sta.password,
+                password,
+                sizeof(wifi_config.sta.password));
+
+        ESP_LOGI(TAG, "Using stored WiFi credentials");
+    }
+    else
+    {
+        ESP_LOGW(TAG, "No stored credentials, using fallback");
+
+        strlcpy((char *)wifi_config.sta.ssid,
+                "FallbackSSID",
+                sizeof(wifi_config.sta.ssid));
+
+        strlcpy((char *)wifi_config.sta.password,
+                "FallbackPASS",
+                sizeof(wifi_config.sta.password));
+    }
+
+    /* -------------------- WiFi Security & Retry -------------------- */
+    wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
+    wifi_config.sta.pmf_cfg.capable = true;
+    wifi_config.sta.pmf_cfg.required = false;
+    wifi_config.sta.failure_retry_cnt = 5;
+
+    /* -------------------- Start WiFi -------------------- */
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
+    ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));  // Disable power save during sync
+    ESP_ERROR_CHECK(esp_wifi_start());
+
+    ESP_LOGI(TAG, "WiFi initialization finished");
+
+    return ESP_OK;
+}
+
 
 /* Wait until connected or failed */
 void wifi_manager_wait_for_connection(void)
@@ -157,10 +272,16 @@ void wifi_manager_wait_for_connection(void)
     if (bits & WIFI_CONNECTED_BIT)
     {
         ESP_LOGI(TAG, "Connected to WiFi successfully");
+        // i2c_lcd_clear();
+        // i2c_lcd_set_cursor(0,0);
+        // i2c_lcd_send_string("WiFi Connected");
     }
     else if (bits & WIFI_FAIL_BIT)
     {
         ESP_LOGE(TAG, "WiFi connection failed");
+        // i2c_lcd_clear();
+        // i2c_lcd_set_cursor(0,0);
+        // i2c_lcd_send_string("Wifi failed");
     }
 }
 
@@ -170,7 +291,6 @@ bool wifi_manager_is_connected(void)
     return s_is_connected;
 }
 
-/*
 esp_err_t load_wifi_cred_from_usb_to_flash(void){
     //For Wifi credentials
     FILE *src2 = fopen(USB_WIFI_CRED_PATH, "r");
@@ -210,7 +330,7 @@ esp_err_t load_wifi_cred_from_txt(void){
     if (fgets(ssid, MAX_SSID_LEN, f) == NULL) {
         ESP_LOGE(TAG, "Failed to read SSID");
         fclose(f);
-        return false;
+        return ESP_FAIL;
     }
 
     // Remove newline
@@ -220,7 +340,7 @@ esp_err_t load_wifi_cred_from_txt(void){
     if (fgets(password, MAX_PASS_LEN, f) == NULL) {
         ESP_LOGE(TAG, "Failed to read password");
         fclose(f);
-        return false;
+        return ESP_FAIL;
     }
 
     // Remove newline
@@ -232,17 +352,39 @@ esp_err_t load_wifi_cred_from_txt(void){
     ESP_LOGI(TAG, "SSID: %s", ssid);
     ESP_LOGI(TAG, "PASS: %s", password);
     
+    vTaskDelay(pdMS_TO_TICKS(1000));
     return ESP_OK;
 }
 
-void wifi_monitor_task(void *pv)
-{
-    wifi_manager_wait_for_connection();
+// void wifi_monitor_task(void *pv)
+// {
+//     wifi_manager_wait_for_connection();
+//     wifi_rtc_init();
+//     // if (wifi_manager_is_connected()) {
+//     //     wifi_rtc_init();
+//     // }
 
-    if (wifi_manager_is_connected()) {
-        wifi_rtc_init();
-    }
+//     vTaskDelete(NULL);
+// }
 
-    vTaskDelete(NULL);
-}
-*/
+
+// void wifi_auto_connect_task(void *pv)
+// {
+//     if (load_wifi_cred_from_txt() == ESP_OK)
+//     {
+//         wifi_manager_wait_for_connection();   // start connection attempt
+
+//         if (wifi_manager_is_connected()) {
+//             wifi_rtc_init();
+//             ESP_LOGI("WIFI", "Auto connect success");
+//         } else {
+//             ESP_LOGW("WIFI", "Auto connect failed");
+//         }
+//     }
+//     else
+//     {
+//         ESP_LOGW("WIFI", "No stored credentials");
+//     }
+
+//     vTaskDelete(NULL);
+// }
