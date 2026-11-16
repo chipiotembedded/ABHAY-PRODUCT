@@ -63,9 +63,11 @@ void handle_button2_action(){
         case STATE_MAIN_MENU:
             request_screen(STATE_PASSWORD);
             break;
-            
         case STATE_LEVEL1_MENU:
             request_screen(STATE_PASSWORD);
+            break;
+        case STATE_LEVEL2_MENU:
+            request_screen(STATE_SEND_TO_USB);
             break;
 
         default:
@@ -100,6 +102,10 @@ void handle_back_button_action(){
             break;
 
         case STATE_FLAT_OWNER:
+            request_screen(STATE_LEVEL2_MENU);
+            break;
+
+        case STATE_SEND_TO_USB:
             request_screen(STATE_LEVEL2_MENU);
             break;
             

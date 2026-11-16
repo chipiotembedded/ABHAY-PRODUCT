@@ -188,11 +188,11 @@ void load_owners_from_csv(const char *path) {
             owners[total_owners].flat[sizeof(owners[total_owners].flat) - 1] = 0;
             owners[total_owners].mac[sizeof(owners[total_owners].mac) - 1] = 0;
 
-            ESP_LOGI(TAG, "Row %d: name='%s' flat='%s' mac='%s'",
-                     total_owners,
-                     owners[total_owners].name,
-                     owners[total_owners].flat,
-                     owners[total_owners].mac);
+            // ESP_LOGI(TAG, "Row %d: name='%s' flat='%s' mac='%s'",
+            //          total_owners,
+            //          owners[total_owners].name,
+            //          owners[total_owners].flat,
+            //          owners[total_owners].mac);
 
             total_owners++;
         }

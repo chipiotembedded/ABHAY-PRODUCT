@@ -33,6 +33,7 @@ const MenuItem level1_menu_items[] = {
 
 const MenuItem level2_menu_items[] = {
     {STATE_FLAT_OWNER, "Flat Owners"},
+    {STATE_SEND_TO_USB, "Send ActLog"},
 };
 
 void display_task(void *arg)
@@ -122,18 +123,13 @@ void show_screen(StateID state) {
         //     break;
 
         case STATE_ACTIVITY_LOG: {
-            int logs = 0;
+            total_logs = get_total_logs();   // Directly read from file
 
-            if (nvs_mutex &&
-                xSemaphoreTake(nvs_mutex, pdMS_TO_TICKS(200)) == pdTRUE) {
-                logs = get_total_logs();
-                xSemaphoreGive(nvs_mutex);
-            }
-
-            if (logs > 0) {
+            if (total_logs > 0) {
                 current_log_index = 0;
                 display_log_entry(current_log_index);
             } else {
+                i2c_lcd_clear();
                 i2c_lcd_set_cursor(0, 0);
                 i2c_lcd_send_string("No activity logs");
             }
@@ -168,15 +164,17 @@ void show_screen(StateID state) {
             i2c_lcd_send_string(line);
             break;
 
-        // case STATE_LORA_PACKET:
-        //     if(xQueueReceive(lora_rx_queue, &current_received,0)==pdTRUE) {
-        //         i2c_lcd_clear();
-        //         i2c_lcd_set_cursor(0,0);
-        //         i2c_lcd_send_string(current_received.name);
-        //         i2c_lcd_set_cursor(1,0);
-        //         i2c_lcd_send_string(current_received.flat);
-        //     }
-        //     break;
+        case STATE_SEND_TO_USB:
+            if (copy_activity_to_usb() == ESP_OK) {
+                i2c_lcd_clear();
+                i2c_lcd_set_cursor(0,0);
+                i2c_lcd_send_string("Log Exported");
+            } else {
+                i2c_lcd_clear();
+                i2c_lcd_set_cursor(0,0);
+                i2c_lcd_send_string("Export Failed");
+            }
+            break;
 
         default:
             i2c_lcd_set_cursor(0, 0);
