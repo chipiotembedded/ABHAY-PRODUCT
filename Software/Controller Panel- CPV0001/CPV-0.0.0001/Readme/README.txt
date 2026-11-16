@@ -1,33 +1,37 @@
 ================================================================
-README - main5 (Changes vs main4)
+README - main7 (Changes vs main5)
 ================================================================
 
-Summary: Temporarily disables the silence button and buzzer
-functionality (likely for debugging/testing hardware without a
-buzzer wired up, or to isolate a bug).
+NOTE: There is no "main6" folder in this collection, so this
+README documents the differences directly from main5 to main7.
+
+Summary: Re-enables the silence button wiring (partially) and
+introduces packet framing for LoRa messages (sender ID separated by
+a '|' delimiter), improving parsing robustness.
 
 Key changes by file:
 
-- button_handler.c/.h:
-    * Silence_BUTTON pin definition commented out.
-    * handle_silence_button() function commented out.
-    * The GPIO bit-mask configuration for buttons no longer includes
-      Silence_BUTTON (left as a trailing comment).
-    * button_task() no longer checks/handles the silence button at
-      all; the "only poll other buttons if !shouldBeep" guard was
-      also commented out, so buttons are now always polled
-      regardless of shouldBeep state (since shouldBeep-related code
-      was disabled elsewhere too).
+- button_handler.c:
+    * The is_button_pressed() debounce helper is commented back out
+      (its usage was already removed in main5); the GPIO bit-mask
+      comment for Silence_BUTTON was reformatted but the button
+      remains excluded from the active mask.
 
-- lora_receive.c/.h:
-    * shouldBeep global variable declaration/definition commented out.
-    * buzzer_control_task() function body commented out (buzzer no
-      longer toggled based on shouldBeep).
-    * BUZZER_PIN definition commented out in the header.
-    * The buzzer_control_task is no longer started in receiver_start().
-    * The line that set shouldBeep = true on a recognized owner is
-      commented out.
+- lora_receive.c:
+    * Receive buffer size reduced from 256 to 100 bytes, and
+      lora_receive_packet() now reserves 1 byte for the null
+      terminator up front (`sizeof(buf)-1`) rather than checking
+      after the fact.
+    * NEW: incoming packets are now expected in the form
+      "<sender>|<rest>" - the code tokenizes the buffer on '|' using
+      strtok() and only uses the sender portion for owner lookup
+      and duplicate-suppression, instead of treating the whole raw
+      buffer as the MAC/identifier string.
+    * "Unknown MAC" screen now displays the parsed `sender` value
+      instead of the raw buffer.
+    * Removed a large (very old, already-unused) alternative
+      implementation block that had been kept commented out at the
+      bottom of the file since earlier versions - fully deleted here.
 
-Net effect: this version effectively disables the audible
-buzzer/panic alert path while keeping the rest of the receive and
-button logic intact, likely as an intermediate debugging step.
+Net effect: LoRa receive parsing is now delimiter-aware, laying the
+groundwork for richer packet payloads in later versions.

@@ -15,21 +15,22 @@ void initialize_buttons() {
         .mode = GPIO_MODE_INPUT,
         .pin_bit_mask = (1ULL << BUTTON_1) | (1ULL << BUTTON_2) | 
                        (1ULL << BUTTON_BACK) | (1ULL << BUTTON_UP) | 
-                       (1ULL << BUTTON_NEXT) | /*(1ULL << Silence_BUTTON)*/,
+                       (1ULL << BUTTON_NEXT) ,
+                       //| (1ULL << Silence_BUTTON)
         .pull_down_en = GPIO_PULLDOWN_DISABLE,
         .pull_up_en = GPIO_PULLUP_ENABLE
     };
     gpio_config(&io_conf);
 }
 
-static bool is_button_pressed(gpio_num_t gpio)
-{
-    if (gpio_get_level(gpio) == 0) {
-        vTaskDelay(pdMS_TO_TICKS(DEBOUNCE_DELAY_MS));
-        return gpio_get_level(gpio) == 0;
-    }
-    return false;
-}
+// static bool is_button_pressed(gpio_num_t gpio)
+// {
+//     if (gpio_get_level(gpio) == 0) {
+//         vTaskDelay(pdMS_TO_TICKS(DEBOUNCE_DELAY_MS));
+//         return gpio_get_level(gpio) == 0;
+//     }
+//     return false;
+// }
 
 void handle_button1_action() {
     switch(current_state) {
