@@ -1,58 +1,33 @@
 ================================================================
-README - main4 (Changes vs main3)
+README - main5 (Changes vs main4)
 ================================================================
 
-Summary: Introduces an LCD mutex to make LCD access thread-safe
-across tasks, moves screen updates onto a dedicated display_task
-driven by a queue, and experiments with (but ultimately keeps
-disabled) a queue-based LoRa receive redesign.
+Summary: Temporarily disables the silence button and buzzer
+functionality (likely for debugging/testing hardware without a
+buzzer wired up, or to isolate a bug).
 
 Key changes by file:
 
-- lcd_i2c.c/.h:
-    * Added a global `lcd_mutex` semaphore, created in i2c_lcd_init().
-    * i2c_lcd_set_cursor() simplified (removed intermediate `address`
-      variable, minor refactor); commented-out mutex-protected
-      variants of set_cursor/send_string/clear left as reference for
-      a future approach that wasn't adopted yet in this version.
-    * i2c_lcd_clear() delay increased from 2ms to 10ms.
+- button_handler.c/.h:
+    * Silence_BUTTON pin definition commented out.
+    * handle_silence_button() function commented out.
+    * The GPIO bit-mask configuration for buttons no longer includes
+      Silence_BUTTON (left as a trailing comment).
+    * button_task() no longer checks/handles the silence button at
+      all; the "only poll other buttons if !shouldBeep" guard was
+      also commented out, so buttons are now always polled
+      regardless of shouldBeep state (since shouldBeep-related code
+      was disabled elsewhere too).
 
-- button_handler.c:
-    * POST_PRESS_DELAY_MS reduced from 200 to 130 for snappier
-      response.
+- lora_receive.c/.h:
+    * shouldBeep global variable declaration/definition commented out.
+    * buzzer_control_task() function body commented out (buzzer no
+      longer toggled based on shouldBeep).
+    * BUZZER_PIN definition commented out in the header.
+    * The buzzer_control_task is no longer started in receiver_start().
+    * The line that set shouldBeep = true on a recognized owner is
+      commented out.
 
-- lora_receive.c:
-    * The active lora_receive_task/receiver_start implementation is
-      unchanged in behavior, but a large alternative implementation
-      (using a queue-based FlatOwner message system with
-      xQueueOverwrite/lora_rx_queue instead of direct LCD writes) was
-      drafted and left commented out at the bottom of the file for
-      future reference. It is NOT active in this version.
-
-- main.c:
-    * Removed the local display_task() (moved to screen_display.c).
-    * display_queue is now non-static (accessible from other files).
-    * current_state global moved out of main.c (now lives in
-      screen_display.c).
-
-- screen_display.c/.h:
-    * Added display_task(void *arg): a new FreeRTOS task that reads
-      StateID values from display_queue and calls show_screen() while
-      holding lcd_mutex, decoupling screen requests from screen
-      rendering.
-    * request_screen() simplified to always set current_state and
-      call show_screen() directly (no longer bounds-checks state or
-      skips redraw of the same state).
-    * show_screen() now takes lcd_mutex for its entire body (guards
-      against concurrent LCD writes from multiple tasks), and returns
-      early with an error log if the mutex isn't initialized yet.
-    * show_menu() reworked to always print "Menu" then up to 3 items
-      on subsequent lines (previously cleared screen itself; now
-      caller/show_screen owns clearing).
-    * STATE_ACTIVITY_LOG now takes nvs_mutex with a 200ms timeout
-      instead of blocking forever, improving robustness.
-    * A speculative STATE_LORA_PACKET case (queue-driven LoRa display)
-      was added but left commented out, alongside a matching
-      (also commented out) STATE_LORA_PACKET enum entry.
-    * A default case was added to show_screen() to display
-      "Invalid State" for any unhandled state.
+Net effect: this version effectively disables the audible
+buzzer/panic alert path while keeping the rest of the receive and
+button logic intact, likely as an intermediate debugging step.

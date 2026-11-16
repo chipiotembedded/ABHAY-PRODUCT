@@ -6,7 +6,7 @@
 #define BUTTON_BACK 6
 #define BUTTON_UP 7      
 #define BUTTON_NEXT 17
-#define Silence_BUTTON 18
+//#define Silence_BUTTON 18
 
 #include <string.h>
 #include "freertos/FreeRTOS.h"   // For TickType_t
@@ -30,7 +30,7 @@ void handle_button2_action();
 void handle_back_button_action();
 void handle_up_button_action();
 void handle_next_button_action();
-void handle_silence_button(void);
+// void handle_silence_button(void);
 //void display_log_entry(int index);
 
 #endif

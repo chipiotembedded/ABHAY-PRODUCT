@@ -15,7 +15,7 @@ void initialize_buttons() {
         .mode = GPIO_MODE_INPUT,
         .pin_bit_mask = (1ULL << BUTTON_1) | (1ULL << BUTTON_2) | 
                        (1ULL << BUTTON_BACK) | (1ULL << BUTTON_UP) | 
-                       (1ULL << BUTTON_NEXT) | (1ULL << Silence_BUTTON),
+                       (1ULL << BUTTON_NEXT) | /*(1ULL << Silence_BUTTON)*/,
         .pull_down_en = GPIO_PULLDOWN_DISABLE,
         .pull_up_en = GPIO_PULLUP_ENABLE
     };
@@ -174,23 +174,23 @@ void handle_next_button_action() {
 }
 
 // ================= Silence Button Handler =================
-void handle_silence_button(void) {
-    shouldBeep = false;
-    gpio_set_level(BUZZER_PIN, 0);
-    printf("Buzzer silenced - Buttons Activated\n");
-}
+// void handle_silence_button(void) {
+//     shouldBeep = false;
+//     gpio_set_level(BUZZER_PIN, 0);
+//     printf("Buzzer silenced - Buttons Activated\n");
+// }
 
 void button_task(void *arg) {
     while (1) {
         // Check SILENCE button FIRST - ALWAYS WORKS even when shouldBeep is true
-        if (is_button_pressed(Silence_BUTTON)) {
-            lcd_register_activity();
-            handle_silence_button();
-            vTaskDelay(pdMS_TO_TICKS(POST_PRESS_DELAY_MS));
-        }
+        // if (is_button_pressed(Silence_BUTTON)) {
+        //     lcd_register_activity();
+        //     handle_silence_button();
+        //     vTaskDelay(pdMS_TO_TICKS(POST_PRESS_DELAY_MS));
+        // }
 
-        // Check OTHER 5 BUTTONS only if shouldBeep is FALSE
-        if (!shouldBeep) {
+        // // Check OTHER 5 BUTTONS only if shouldBeep is FALSE
+        // if (!shouldBeep) {
             // BUTTON 1
             if (gpio_get_level(BUTTON_1) == 0) {
                 if (gpio_get_level(BUTTON_1) == 0) {
@@ -231,7 +231,7 @@ void button_task(void *arg) {
                 }
             }
             vTaskDelay(pdMS_TO_TICKS(POST_PRESS_DELAY_MS));
-        } 
+        // } 
         vTaskDelay(pdMS_TO_TICKS(10)); // Polling interval
     }
 }

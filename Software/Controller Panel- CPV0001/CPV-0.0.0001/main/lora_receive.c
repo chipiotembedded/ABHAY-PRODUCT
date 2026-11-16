@@ -38,25 +38,25 @@ static bool should_accept(const char *mac) {
 }
 
 // ================= Panic System Flags =================
-bool shouldBeep = false;
+// bool shouldBeep = false;
 
 // ================= Buzzer Task =================
-void buzzer_control_task(void *pvParameter) {
-    gpio_config_t io_conf = {
-        .pin_bit_mask = (1ULL << BUZZER_PIN),
-        .mode = GPIO_MODE_OUTPUT,
-        .pull_up_en = GPIO_PULLUP_DISABLE,
-        .pull_down_en = GPIO_PULLDOWN_DISABLE,
-        .intr_type = GPIO_INTR_DISABLE
-    };
-    gpio_config(&io_conf);
-    gpio_set_level(BUZZER_PIN, 0);
+// void buzzer_control_task(void *pvParameter) {
+//     gpio_config_t io_conf = {
+//         .pin_bit_mask = (1ULL << BUZZER_PIN),
+//         .mode = GPIO_MODE_OUTPUT,
+//         .pull_up_en = GPIO_PULLUP_DISABLE,
+//         .pull_down_en = GPIO_PULLDOWN_DISABLE,
+//         .intr_type = GPIO_INTR_DISABLE
+//     };
+//     gpio_config(&io_conf);
+//     gpio_set_level(BUZZER_PIN, 0);
 
-    while (1) {
-        gpio_set_level(BUZZER_PIN, shouldBeep ? 1 : 0);
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
-}
+//     while (1) {
+//         gpio_set_level(BUZZER_PIN, shouldBeep ? 1 : 0);
+//         vTaskDelay(pdMS_TO_TICKS(10));
+//     }
+// }
 
 FlatOwner* find_owner_by_mac(const char *mac) {
     for (int i = 0; i < total_owners; i++) {
@@ -87,7 +87,7 @@ static void lora_receive_task(void *param){
             if (should_accept((char*)buf)) {
                 FlatOwner *owner = find_owner_by_mac((char*)buf);
                 if (owner) {
-                    shouldBeep = true;
+                    //shouldBeep = true;
                     i2c_lcd_clear();
                     i2c_lcd_set_cursor(0, 0);
                     i2c_lcd_send_string(owner->name);
@@ -134,7 +134,7 @@ void receiver_start(void) {
     // Start tasks
     xTaskCreatePinnedToCore(lora_receive_task, "lora_rx_task", 4096, NULL, 24, NULL, 0);
     // xTaskCreatePinnedToCore(lora_receive_task, "lora_rx_task", 4096, NULL, 10, NULL, 0);
-    xTaskCreate(buzzer_control_task, "buzzer_ctl", 1024, NULL, 5, NULL);
+    //xTaskCreate(buzzer_control_task, "buzzer_ctl", 1024, NULL, 5, NULL);
     
 }
 
