@@ -11,25 +11,15 @@
 #include "password.h"
 
 static const char *TAG = "Main";
-static QueueHandle_t display_queue = NULL;
+QueueHandle_t display_queue = NULL;
 
 // Global state variables
-StateID current_state = STATE_BOOT;
+// StateID current_state = STATE_BOOT;
 int entered_password[PASSWORD_LENGTH] = {0};
 int current_digit_index = 0;
 //const int correct_password[PASSWORD_LENGTH] = {1, 1, 1, 1};
 bool password_verified = false;
 
-
-void display_task(void *arg) {
-    StateID id;
-    while (1) {
-        if (xQueueReceive(display_queue, &id, portMAX_DELAY)) {
-            current_state = id;
-            show_screen(id);  // ✅ Add this line to reflect on LCD
-        }
-    }
-}
 
 void app_main(void) {
     // Initialize all system components
@@ -67,6 +57,8 @@ void app_main(void) {
         ESP_LOGI(TAG, "lcd_bl_timer task created successfully");
     }
     
+    // lora_rx_queue = xQueueCreate(5, sizeof(FlatOwner));
+
     ESP_LOGI(TAG, "Starting application");
     
     // Initial screen sequence

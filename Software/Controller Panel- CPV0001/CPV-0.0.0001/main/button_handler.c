@@ -2,7 +2,7 @@
 
 //const TickType_t button_debounce_delay = pdMS_TO_TICKS(0);
 #define DEBOUNCE_DELAY_MS   50
-#define POST_PRESS_DELAY_MS 200
+#define POST_PRESS_DELAY_MS 130
 
 void reset_password_input(void) {
     memset(entered_password, 0, sizeof(entered_password));

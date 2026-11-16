@@ -2,6 +2,8 @@
 #define I2C_LCD_H
 
 #include <stdint.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
 #include "driver/i2c.h"
 
 // I2C Configuration
@@ -43,6 +45,8 @@
 // Backlight control
 #define LCD_BACKLIGHT             0x08
 #define LCD_NOBACKLIGHT           0x00
+
+extern SemaphoreHandle_t lcd_mutex;
 
 // Function prototypes
 void i2c_lcd_init(void);

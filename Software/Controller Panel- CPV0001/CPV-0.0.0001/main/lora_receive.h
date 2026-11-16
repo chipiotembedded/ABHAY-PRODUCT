@@ -37,6 +37,7 @@ typedef struct {
 
 // ================== Globals ==================
 extern bool shouldBeep;
+// extern QueueHandle_t lora_rx_queue;
 
 // ================== Functions ==================
 void receiver_start(void);                   // Start LoRa + tasks

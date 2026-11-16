@@ -1,69 +1,58 @@
 ================================================================
-README - main3 (Changes vs main2)
+README - main4 (Changes vs main3)
 ================================================================
 
-Summary: Adds PIN/password protection to the menu system, moves
-StateID/menu type definitions into screen_display.h (removing
-system_states.h), and improves button debouncing.
-
-Added files:
-  - password.c/.h : new module. Loads a password from a text file
-    (password.txt) copied from USB to LittleFS, and holds the
-    correct_password array used to validate PIN entry.
-
-Removed files:
-  - system_states.h : StateID enum and MenuItem struct moved into
-    screen_display.h instead.
+Summary: Introduces an LCD mutex to make LCD access thread-safe
+across tasks, moves screen updates onto a dedicated display_task
+driven by a queue, and experiments with (but ultimately keeps
+disabled) a queue-based LoRa receive redesign.
 
 Key changes by file:
 
+- lcd_i2c.c/.h:
+    * Added a global `lcd_mutex` semaphore, created in i2c_lcd_init().
+    * i2c_lcd_set_cursor() simplified (removed intermediate `address`
+      variable, minor refactor); commented-out mutex-protected
+      variants of set_cursor/send_string/clear left as reference for
+      a future approach that wasn't adopted yet in this version.
+    * i2c_lcd_clear() delay increased from 2ms to 10ms.
+
 - button_handler.c:
-    * Replaced the old fixed-delay debounce (vTaskDelay after every
-      action) with a helper is_button_pressed() that does a
-      press-then-recheck debounce (50ms).
-    * Removed the old generic handle_button_press(int button)
-      dispatcher function (now unused/dead code).
-    * Silence button is now checked first and unconditionally on
-      every loop iteration; the other 5 buttons are only polled
-      while shouldBeep is false, and only require a single press
-      check (debounce handled by is_button_pressed()).
-    * Back button now also calls reset_password_input() when
-      leaving the password screen.
+    * POST_PRESS_DELAY_MS reduced from 200 to 130 for snappier
+      response.
 
-- lora.c:
-    * Reverted lora_sleep() to use the proper
-      MODE_LONG_RANGE_MODE|MODE_SLEEP register value instead of the
-      raw 0x00 value used temporarily in main2.
-
-- lora_receive.c/.h:
-    * Header now pulls in most of its own includes directly (lora.h,
-      lcd_i2c.h, activity_log.h, button_handler.h, rtc.h,
-      screen_display.h) rather than relying on the .c file; also adds
-      MAX_OWNERS and exposes the owners[] array via extern.
-    * Removed leftover unused code from the .c file (now just
-      includes lora_receive.h - most includes centralized in header).
+- lora_receive.c:
+    * The active lora_receive_task/receiver_start implementation is
+      unchanged in behavior, but a large alternative implementation
+      (using a queue-based FlatOwner message system with
+      xQueueOverwrite/lora_rx_queue instead of direct LCD writes) was
+      drafted and left commented out at the bottom of the file for
+      future reference. It is NOT active in this version.
 
 - main.c:
-    * Added password.h include.
-    * correct_password[] constant array commented out (now supplied
-      by password.c) but not yet fully wired up in this version.
+    * Removed the local display_task() (moved to screen_display.c).
+    * display_queue is now non-static (accessible from other files).
+    * current_state global moved out of main.c (now lives in
+      screen_display.c).
 
 - screen_display.c/.h:
-    * StateID enum, MenuItem struct, and related extern menu arrays
-      moved from system_states.h into screen_display.h.
-    * .c file greatly simplified (most includes now come transitively
-      via the header).
-
-- system_init.h:
-    * Removed system_states.h include (types now via screen_display.h
-      and button_handler.h include chain); added button_handler.h.
-
-- usb_update.c/.h:
-    * copy_csv_to_lfs() (renamed conceptually) now also copies
-      password.txt from USB to LittleFS in addition to test.csv.
-    * usb_update_task now also calls load_pass_from_txt() after
-      loading owners, both at startup and after a fresh USB copy.
-    * USB_FILE_PATH changed from "/usb/ESP/test.csv" to
-      "/usb/test.csv".
-    * MAX_OWNERS definition moved out of this header (now lives in
-      lora_receive.h).
+    * Added display_task(void *arg): a new FreeRTOS task that reads
+      StateID values from display_queue and calls show_screen() while
+      holding lcd_mutex, decoupling screen requests from screen
+      rendering.
+    * request_screen() simplified to always set current_state and
+      call show_screen() directly (no longer bounds-checks state or
+      skips redraw of the same state).
+    * show_screen() now takes lcd_mutex for its entire body (guards
+      against concurrent LCD writes from multiple tasks), and returns
+      early with an error log if the mutex isn't initialized yet.
+    * show_menu() reworked to always print "Menu" then up to 3 items
+      on subsequent lines (previously cleared screen itself; now
+      caller/show_screen owns clearing).
+    * STATE_ACTIVITY_LOG now takes nvs_mutex with a 200ms timeout
+      instead of blocking forever, improving robustness.
+    * A speculative STATE_LORA_PACKET case (queue-driven LoRa display)
+      was added but left commented out, alongside a matching
+      (also commented out) STATE_LORA_PACKET enum entry.
+    * A default case was added to show_screen() to display
+      "Invalid State" for any unhandled state.

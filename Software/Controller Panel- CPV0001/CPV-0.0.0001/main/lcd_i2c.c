@@ -4,6 +4,7 @@
 #include "esp_err.h"
 
 static const char *TAG = "LCD_I2C";
+SemaphoreHandle_t lcd_mutex = NULL;
 
 // Improved I2C send function with error handling
 static esp_err_t i2c_send_byte(uint8_t data) {
@@ -34,6 +35,10 @@ static void i2c_lcd_send_nibble(uint8_t nibble, uint8_t rs) {
 
 // Initialize I2C LCD with robust sequence
 void i2c_lcd_init(void) {
+
+    lcd_mutex = xSemaphoreCreateMutex();
+    assert(lcd_mutex != NULL);
+
     // Configure I2C
     i2c_config_t conf = {
         .mode = I2C_MODE_MASTER,
@@ -86,17 +91,24 @@ void i2c_lcd_send_data(uint8_t data) {
     i2c_lcd_send_nibble(data & 0x0F, 1); // Low nibble
 }
 
-// Set cursor position (16x4 LCD)
+//Set cursor position (16x4 LCD)
 void i2c_lcd_set_cursor(uint8_t row, uint8_t col) {
+    // vTaskDelay(pdTICKS_TO_MS(1));
     const uint8_t row_offsets[] = {0x00, 0x40, 0x10, 0x50};
     uint8_t address = col + (row < 4 ? row_offsets[row] : 0);
-    i2c_lcd_send_cmd(0x80 | address);
+    // i2c_lcd_send_cmd(0x80 | address);
+    i2c_lcd_send_cmd(0x80 | (row_offsets[row] + col));
 }
 
-// void i2c_lcd_set_cursor(uint8_t row, uint8_t col) {
-//     uint8_t row_offsets[] = {0x00, 0x40, 0x10, 0x50};
-//     if (row > 3) row = 3;  // limit row
-//     i2c_lcd_send_cmd(0x80 | (col + row_offsets[row]));
+// Set cursor position (16x4 LCD) with mutex
+// void i2c_lcd_set_cursor(uint8_t row, uint8_t col)
+// {
+//     if (xSemaphoreTake(lcd_mutex, pdMS_TO_TICKS(200))) {
+//         const uint8_t row_offsets[] = {0x00, 0x40, 0x10, 0x50};
+//         uint8_t address = col + (row < 4 ? row_offsets[row] : 0);
+//         i2c_lcd_send_cmd(0x80 | address);
+//         xSemaphoreGive(lcd_mutex);
+//     }
 // }
 
 // Print string
@@ -106,11 +118,33 @@ void i2c_lcd_send_string(const char *str) {
     }
 }
 
+// Print string with mutex
+// void i2c_lcd_send_string(const char *str)
+// {
+//     if (xSemaphoreTake(lcd_mutex, pdMS_TO_TICKS(200))) {
+//         while (*str) {
+//             i2c_lcd_send_data(*str++);
+//         }
+//         xSemaphoreGive(lcd_mutex);
+//     }
+// }
+
+
 // Clear display
 void i2c_lcd_clear(void) {
     i2c_lcd_send_cmd(0x01);
-    vTaskDelay(pdMS_TO_TICKS(2));
+    vTaskDelay(pdMS_TO_TICKS(10));
 }
+
+// Clear display with mutex
+// void i2c_lcd_clear(void)
+// {
+//     if (xSemaphoreTake(lcd_mutex, pdMS_TO_TICKS(200))) {
+//         i2c_lcd_send_cmd(0x01);
+//         vTaskDelay(pdMS_TO_TICKS(2));
+//         xSemaphoreGive(lcd_mutex);
+//     }
+// }
 
 // Control backlight
 void i2c_lcd_backlight(uint8_t state) {

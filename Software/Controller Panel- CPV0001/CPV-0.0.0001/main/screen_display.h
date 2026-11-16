@@ -26,7 +26,9 @@ typedef enum {
     STATE_PASSWORD,
     STATE_UPDATE_INFO,
     STATE_INSTALLATION_MODE,
-    STATE_COUNT  
+    STATE_COUNT
+    // STATE_LORA_PACKET
+
 } StateID;
 
 // Menu item structure
@@ -40,9 +42,11 @@ extern const MenuItem level1_menu_items[];
 extern const MenuItem level2_menu_items[];
 extern const MenuItem level3_menu_items[];
 
+extern QueueHandle_t display_queue;
 extern StateID current_state;
 
 void show_screen(StateID state);
+void display_task(void *arg);
 void show_menu(const MenuItem *menu, size_t count);
 void request_screen(StateID state);
 #endif
