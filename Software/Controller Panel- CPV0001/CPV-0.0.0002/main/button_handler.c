@@ -1,7 +1,7 @@
 #include "button_handler.h"
 
 //const TickType_t button_debounce_delay = pdMS_TO_TICKS(0);
-#define DEBOUNCE_DELAY_MS   40
+#define DEBOUNCE_DELAY_MS   50
 #define POST_PRESS_DELAY_MS 100
 
 void reset_password_input(void) {
@@ -35,19 +35,19 @@ static bool is_button_pressed(gpio_num_t gpio)
 void handle_button1_action() {
     switch(current_state) {
         case STATE_NAME_OF_SOCIETY:
-            request_screen(STATE_MAIN_MENU);
+            show_screen(STATE_MAIN_MENU);
             break;
 
         case STATE_MAIN_MENU:
-            request_screen(STATE_LEVEL1_MENU);
+            show_screen(STATE_LEVEL1_MENU);
             break;
             
         case STATE_LEVEL1_MENU:
-            request_screen(STATE_ACTIVITY_LOG);
+            show_screen(STATE_ACTIVITY_LOG);
             break;
             
         case STATE_LEVEL2_MENU:
-            request_screen(STATE_FLAT_OWNER);
+            show_screen(STATE_FLAT_OWNER);
             break;
             
         default:
@@ -58,16 +58,16 @@ void handle_button1_action() {
 void handle_button2_action(){
     switch(current_state) {
         case STATE_NAME_OF_SOCIETY:
-            request_screen(STATE_MAIN_MENU);
+            show_screen(STATE_MAIN_MENU);
             break;
         case STATE_MAIN_MENU:
-            request_screen(STATE_PASSWORD);
+            show_screen(STATE_PASSWORD);
             break;
         case STATE_LEVEL1_MENU:
-            request_screen(STATE_PASSWORD);
+            show_screen(STATE_PASSWORD);
             break;
         case STATE_LEVEL2_MENU:
-            request_screen(STATE_SEND_ACTLOG_TO_USB);
+            show_screen(STATE_SEND_ACTLOG_TO_USB);
             break;
 
         default:
@@ -78,35 +78,35 @@ void handle_button2_action(){
 void handle_back_button_action(){
     switch(current_state) {
         case STATE_NAME_OF_SOCIETY:
-            request_screen(STATE_MAIN_MENU);
+            show_screen(STATE_MAIN_MENU);
             break;
         case STATE_MAIN_MENU:
-            request_screen(STATE_NAME_OF_SOCIETY);
+            show_screen(STATE_NAME_OF_SOCIETY);
             break;
             
         case STATE_LEVEL1_MENU:
-            request_screen(STATE_MAIN_MENU);
+            show_screen(STATE_MAIN_MENU);
             break;
             
         case STATE_LEVEL2_MENU:
-            request_screen(STATE_MAIN_MENU);
+            show_screen(STATE_MAIN_MENU);
             break;
 
         case STATE_ACTIVITY_LOG:
-            request_screen(STATE_LEVEL1_MENU);
+            show_screen(STATE_LEVEL1_MENU);
             break;
 
         case STATE_PASSWORD:
-            request_screen(STATE_MAIN_MENU);
+            show_screen(STATE_MAIN_MENU);
             reset_password_input();
             break;
 
         case STATE_FLAT_OWNER:
-            request_screen(STATE_LEVEL2_MENU);
+            show_screen(STATE_LEVEL2_MENU);
             break;
 
         case STATE_SEND_ACTLOG_TO_USB:
-            request_screen(STATE_LEVEL2_MENU);
+            show_screen(STATE_LEVEL2_MENU);
             break;
             
         default:
@@ -119,7 +119,7 @@ void handle_up_button_action(){
         entered_password[current_digit_index]++;
         if (entered_password[current_digit_index] > 9)
             entered_password[current_digit_index] = 0;
-        request_screen(STATE_PASSWORD);
+        show_screen(STATE_PASSWORD);
     }
     else if (current_state == STATE_ACTIVITY_LOG && total_logs > 0) {
         if (current_log_index > 0) {
@@ -150,7 +150,7 @@ void handle_next_button_action() {
             if (match) {
                 password_verified = true;
                 reset_password_input();
-                request_screen(STATE_LEVEL2_MENU);
+                show_screen(STATE_LEVEL2_MENU);
             } else {
                 memset(entered_password, 0, sizeof(entered_password));
                 reset_password_input();
@@ -159,17 +159,12 @@ void handle_next_button_action() {
                 // i2c_lcd_send_string("Wrong Password");
                 // vTaskDelay(pdMS_TO_TICKS(1500));
 
-                if (xSemaphoreTake(lcd_mutex, pdMS_TO_TICKS(20))) {
-                    i2c_lcd_clear();
-                    i2c_lcd_set_cursor(1, 2);
-                    i2c_lcd_send_string("Wrong Password");
-                    xSemaphoreGive(lcd_mutex);
-                }
+                lcd_display_text(1, 2, "Wrong Password", true);
                 vTaskDelay(pdMS_TO_TICKS(1500));
-                request_screen(STATE_PASSWORD);                
+                show_screen(STATE_PASSWORD);                
             }
         }else {
-            request_screen(STATE_PASSWORD);
+            show_screen(STATE_PASSWORD);
         }
     }
 

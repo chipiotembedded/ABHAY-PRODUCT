@@ -5,6 +5,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 #include "driver/i2c.h"
+#include <string.h>
 
 // I2C Configuration
 #define I2C_MASTER_SCL_IO          11        // GPIO number for I2C clock
@@ -46,6 +47,15 @@
 #define LCD_BACKLIGHT             0x08
 #define LCD_NOBACKLIGHT           0x00
 
+typedef struct {
+    uint8_t line;      // 0-3
+    uint8_t col;       // 0-15
+    char text[17];     // Max 16 chars + null
+    bool clear_first;  // Clear screen before writing
+} lcd_message_t;
+
+// Queue handle
+extern QueueHandle_t lcd_queue;
 extern SemaphoreHandle_t lcd_mutex;
 
 // Function prototypes
@@ -61,4 +71,7 @@ void i2c_lcd_write_char(char c);
 void lcd_register_activity(void);
 void lcd_backlight_timeout_task(void *arg);
 
+// Function to send message to LCD task
+void lcd_display_text(uint8_t line, uint8_t col, const char *text, bool clear_first);
+void lcd_task(void *pvParameters);
 #endif

@@ -60,8 +60,8 @@ static void wifi_event_handler(void *arg,
 
         s_retry_num = 0;
         s_is_connected = true;
-
-        vTaskDelay(pdMS_TO_TICKS(2000));
+        
+        //vTaskDelay(pdMS_TO_TICKS(2000));
 
         xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
     }

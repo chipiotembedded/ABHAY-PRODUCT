@@ -266,8 +266,20 @@ esp_err_t github_upload_log(void)
     ESP_LOGI(TAG, "File size: %ld bytes", file_size);
 
     char *buffer = malloc(file_size);
-    fread(buffer, 1, file_size, f);
+    if (!buffer) {
+        ESP_LOGE(TAG, "File buffer malloc failed for %ld bytes", file_size);
+        fclose(f);
+        return ESP_ERR_NO_MEM;
+    }
+
+    size_t bytes_read = fread(buffer, 1, file_size, f);
     fclose(f);
+    if (bytes_read != (size_t)file_size) {
+        ESP_LOGE(TAG, "Failed to read complete log file (%u/%ld bytes)",
+                 (unsigned int)bytes_read, file_size);
+        free(buffer);
+        return ESP_FAIL;
+    }
 
     // --- BASE64 ENCODING USING MBEDTLS ---
                        
@@ -411,7 +423,7 @@ esp_err_t github_upload_log(void)
     ESP_LOGI("TIME", "Year now = %d", timeinfo.tm_year + 1900);
     ESP_LOGI("TIME", "Hour now = %d", timeinfo.tm_hour);
     char filename[64];
-    strftime(filename, sizeof(filename), "(Log)%Y-%m-%d_%H:%M.txt", &timeinfo);
+    strftime(filename, sizeof(filename), "(Log)%d-%m-%Y_%H:%M.txt", &timeinfo);
 
     ESP_LOGI(TAG, "Uploading as: %s", filename);
 
@@ -434,8 +446,20 @@ esp_err_t github_upload_log(void)
     ESP_LOGI(TAG, "File size: %ld bytes", file_size);
 
     char *buffer = malloc(file_size);
-    fread(buffer, 1, file_size, f);
+    if (!buffer) {
+        ESP_LOGE(TAG, "Log buffer malloc failed for %ld bytes", file_size);
+        fclose(f);
+        return ESP_ERR_NO_MEM;
+    }
+
+    size_t bytes_read = fread(buffer, 1, file_size, f);
     fclose(f);
+    if (bytes_read != (size_t)file_size) {
+        ESP_LOGE(TAG, "Failed to read complete log file (%u/%ld bytes)",
+                 (unsigned int)bytes_read, file_size);
+        free(buffer);
+        return ESP_FAIL;
+    }
 
     // --- BASE64 ENCODING USING MBEDTLS ---
                        
@@ -563,7 +587,7 @@ esp_err_t github_upload_activity_log(void)
     ESP_LOGI("TIME", "Year now = %d", timeinfo.tm_year + 1900);
     ESP_LOGI("TIME", "Hour now = %d", timeinfo.tm_hour);
     char filename[64];
-    strftime(filename, sizeof(filename), "(Activity_Log)%Y-%m-%d_%H:%M.txt", &timeinfo);
+    strftime(filename, sizeof(filename), "(Activity_Log)%d-%m-%Y_%H:%M.txt", &timeinfo);
 
     ESP_LOGI(TAG, "Uploading as: %s", filename);
 
@@ -586,8 +610,20 @@ esp_err_t github_upload_activity_log(void)
     ESP_LOGI(TAG, "File size: %ld bytes", file_size);
 
     char *buffer = malloc(file_size);
-    fread(buffer, 1, file_size, f);
+    if (!buffer) {
+        ESP_LOGE(TAG, "Activity buffer malloc failed for %ld bytes", file_size);
+        fclose(f);
+        return ESP_ERR_NO_MEM;
+    }
+
+    size_t bytes_read = fread(buffer, 1, file_size, f);
     fclose(f);
+    if (bytes_read != (size_t)file_size) {
+        ESP_LOGE(TAG, "Failed to read complete activity file (%u/%ld bytes)",
+                 (unsigned int)bytes_read, file_size);
+        free(buffer);
+        return ESP_FAIL;
+    }
 
     // --- BASE64 ENCODING USING MBEDTLS ---
                        

@@ -48,7 +48,7 @@ extern QueueHandle_t display_queue;
 extern StateID current_state;
 
 void show_screen(StateID state);
-void display_task(void *arg);
-void show_menu(const MenuItem *menu, size_t count);
-void request_screen(StateID state);
+//void display_task(void *arg);
+//void show_menu(const MenuItem *menu, size_t count);
+//void request_screen(StateID state);
 #endif

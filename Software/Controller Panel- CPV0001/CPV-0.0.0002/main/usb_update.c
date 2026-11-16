@@ -175,31 +175,35 @@ void load_owners_from_csv(void) {
             total_owners++;
         }
     }
+    fclose(f);
 }
 
 // --- Display one slide on LCD ---
 void show_owner_slide(int index) {
     if (total_owners == 0 || index < 0 || index >= total_owners) {
-        i2c_lcd_clear();
-        i2c_lcd_set_cursor(0, 0);
-        i2c_lcd_send_string("No data available");
+        // i2c_lcd_clear();
+        // i2c_lcd_set_cursor(0, 0);
+        // i2c_lcd_send_string("No data available");
+        lcd_display_text(0, 0, "No Data Available", true);
         return;
     }
 
-    i2c_lcd_clear();
+    //i2c_lcd_clear();
     vTaskDelay(pdMS_TO_TICKS(10));
 
     char line[17];
 
     // Line 1: Name (truncate if longer than 16)
     snprintf(line, sizeof(line), "%.16s", owners[index].name);
-    i2c_lcd_set_cursor(0, 0);
-    i2c_lcd_send_string(line);
+    // i2c_lcd_set_cursor(0, 0);
+    // i2c_lcd_send_string(line);
+    lcd_display_text(0, 0, line, true);
 
     // Line 2: Flat
     snprintf(line, sizeof(line), "%.16s", owners[index].flat);
-    i2c_lcd_set_cursor(1, 0);
-    i2c_lcd_send_string(line);
+    // i2c_lcd_set_cursor(1, 0);
+    // i2c_lcd_send_string(line);
+    lcd_display_text(1, 0, line, false);
 
     // Line 3–4: MAC (split if longer than 16)
     char mac_part1[17] = {0};
@@ -213,11 +217,14 @@ void show_owner_slide(int index) {
         mac_part2[16] = '\0';
     }
 
-    i2c_lcd_set_cursor(2, 0);
-    i2c_lcd_send_string(mac_part1);
+    // i2c_lcd_set_cursor(2, 0);
+    // i2c_lcd_send_string(mac_part1);
 
-    i2c_lcd_set_cursor(3, 0);
-    i2c_lcd_send_string(mac_part2);
+    // i2c_lcd_set_cursor(3, 0);
+    // i2c_lcd_send_string(mac_part2);
+
+    lcd_display_text(2, 0, mac_part1, false);
+    lcd_display_text(3, 0, mac_part2, false);
 }
 
 // --- USB MSC Task ---
@@ -300,7 +307,7 @@ void usb_update_task(void *arg) {
             }
 
             // Wait before accessing files
-            vTaskDelay(pdMS_TO_TICKS(1000));
+            //vTaskDelay(pdMS_TO_TICKS(1000));
 
             // Copy and load CSV
             if (copy_csv_to_lfs()) {

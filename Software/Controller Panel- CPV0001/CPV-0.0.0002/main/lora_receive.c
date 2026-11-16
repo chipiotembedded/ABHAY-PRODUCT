@@ -167,7 +167,7 @@ static void lora_receive_task(void *param)
                 lora_receive();
                 continue;
             }
-            vTaskDelay(pdMS_TO_TICKS(100));
+            //vTaskDelay(pdMS_TO_TICKS(100));
             // ---------- Owner Lookup ----------
             FlatOwner *owner = find_owner_by_mac(sender);
             if (owner){
@@ -178,15 +178,18 @@ static void lora_receive_task(void *param)
                 // i2c_lcd_send_string(owner->name);
                 // i2c_lcd_set_cursor(1, 0);
                 // i2c_lcd_send_string(owner->flat);
-                if (xSemaphoreTake(lcd_mutex, pdMS_TO_TICKS(20))){
-                    i2c_lcd_clear();
-                    i2c_lcd_set_cursor(0,0);
-                    i2c_lcd_send_string(owner->name);
-                    i2c_lcd_set_cursor(1,0);
-                    i2c_lcd_send_string(owner->flat);
-                    xSemaphoreGive(lcd_mutex);
-                }
+                // if (xSemaphoreTake(lcd_mutex, pdMS_TO_TICKS(20))){
+                //     i2c_lcd_clear();
+                //     i2c_lcd_set_cursor(0,0);
+                //     i2c_lcd_send_string(owner->name);
+                //     i2c_lcd_set_cursor(1,0);
+                //     i2c_lcd_send_string(owner->flat);
+                //     xSemaphoreGive(lcd_mutex);
+                // }
+                lcd_display_text(0, 0, owner->name, true);
+                lcd_display_text(1, 0, owner->flat, false);
                 //vTaskDelay(pdMS_TO_TICKS(10));
+
 
                 ESP_LOGI(TAG, "Owner Found: %s, Flat %s",
                          owner->name, owner->flat);
@@ -199,16 +202,18 @@ static void lora_receive_task(void *param)
                 ESP_LOGI(TAG, "Received at: %s", timestr);
             }
             else{
-                i2c_lcd_clear();
-                i2c_lcd_set_cursor(0, 0);
-                i2c_lcd_send_string("Unknown MAC");
-                i2c_lcd_set_cursor(1, 0);
-                i2c_lcd_send_string(sender);
+                // i2c_lcd_clear();
+                // i2c_lcd_set_cursor(0, 0);
+                // i2c_lcd_send_string("Unknown MAC");
+                lcd_display_text(0, 0, "Unknown MAC", true);
+                // i2c_lcd_set_cursor(1, 0);
+                // i2c_lcd_send_string(sender);
+                lcd_display_text(1, 0, sender, false);
                 ESP_LOGW(TAG, "MAC not in CSV: %s", sender);
             }
             lora_receive();
         }
-        vTaskDelay(pdMS_TO_TICKS(100));
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
 
@@ -278,8 +283,9 @@ void receiver_start(void) {
     // TaskHandle_t buzzer_handle = NULL;
 
     // Start tasks
+    //xTaskCreate(lora_receive_task, "lora_rx_task", 8196, NULL, 10, NULL);
     xTaskCreatePinnedToCore(lora_receive_task, "lora_rx_task", 8192, NULL, 10, NULL, 0);
-    // xTaskCreatePinnedToCore(lora_receive_task, "lora_rx_task", 4096, NULL, 10, NULL, 0);
+    //xTaskCreatePinnedToCore(buzzer_control_task, "buzzer_ctl", 4096, NULL, 5, NULL, 0);
     xTaskCreate(buzzer_control_task, "buzzer_ctl", 4096, NULL, 5, NULL);
     
     // if (lora_handle) esp_task_wdt_add(lora_handle);
