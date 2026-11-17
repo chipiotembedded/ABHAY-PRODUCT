@@ -9,18 +9,19 @@
 #define Silence_BUTTON 18
 
 #include <string.h>
+#include <stdbool.h>
 #include "freertos/FreeRTOS.h"   // For TickType_t
 #include "freertos/task.h" 
 #include "lcd_i2c.h"
 #include "screen_display.h"
 #include "system_init.h"
-#include "button_handler.h"
 #include "driver/gpio.h"
 #include "usb_update.h"
 #include "password.h"
 #include "esp_task_wdt.h"
 
 extern const TickType_t button_debounce_delay;
+
 
 void initialize_buttons();
 void button_task(void *arg);
@@ -30,7 +31,5 @@ void handle_button2_action();
 void handle_back_button_action();
 void handle_up_button_action();
 void handle_next_button_action();
-// void handle_silence_button(void);
-//void display_log_entry(int index);
 
 #endif

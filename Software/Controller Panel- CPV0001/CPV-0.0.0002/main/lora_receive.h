@@ -25,7 +25,7 @@
 #include "button_handler.h"
 #include "rtc.h"
 #include "screen_display.h"
-#include "esp_task_wdt.h"
+
 
 // ================== Hardware Pins ==================
 #define BUZZER_PIN 9

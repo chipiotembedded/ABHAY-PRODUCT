@@ -1,7 +1,12 @@
 #include "button_handler.h"
+// Global state variables for password input and verification
+int entered_password[PASSWORD_LENGTH] = {0};
+int current_digit_index = 0;
+bool password_verified = false;
+
 
 //const TickType_t button_debounce_delay = pdMS_TO_TICKS(0);
-#define DEBOUNCE_DELAY_MS   50
+#define DEBOUNCE_DELAY_MS   30
 #define POST_PRESS_DELAY_MS 100
 
 void reset_password_input(void) {
@@ -49,6 +54,10 @@ void handle_button1_action() {
         case STATE_LEVEL2_MENU:
             show_screen(STATE_FLAT_OWNER);
             break;
+
+        case STATE_SEND_ALL_LOGS:
+            show_screen(STATE_SEND_ACTIVITY_LOGS);
+            break;
             
         default:
             break;
@@ -67,9 +76,11 @@ void handle_button2_action(){
             show_screen(STATE_PASSWORD);
             break;
         case STATE_LEVEL2_MENU:
-            show_screen(STATE_SEND_ACTLOG_TO_USB);
+            show_screen(STATE_SEND_ALL_LOGS);
             break;
-
+        case STATE_SEND_ALL_LOGS:
+            show_screen(STATE_SEND_SYSTEM_LOGS);
+            break;
         default:
             break;
     }
@@ -105,10 +116,15 @@ void handle_back_button_action(){
             show_screen(STATE_LEVEL2_MENU);
             break;
 
-        case STATE_SEND_ACTLOG_TO_USB:
+        case STATE_SEND_ALL_LOGS:
             show_screen(STATE_LEVEL2_MENU);
             break;
-            
+        case STATE_SEND_ACTIVITY_LOGS:
+            show_screen(STATE_SEND_ALL_LOGS);
+            break;
+        case STATE_SEND_SYSTEM_LOGS:
+            show_screen(STATE_SEND_ALL_LOGS);
+            break;
         default:
             break;
     }

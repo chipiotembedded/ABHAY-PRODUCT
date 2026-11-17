@@ -1,6 +1,10 @@
 #ifndef _LORA_H_
 #define _LORA_H_
 
+#define REG_VERSION        0x42
+#define REG_OP_MODE        0x01
+#define REG_IRQ_FLAGS      0x12
+
 int  lora_init(void);
 void lora_set_frequency(long frequency);
 void lora_set_tx_power(int level);
@@ -19,5 +23,8 @@ void lora_close(void);
 void lora_set_spreading_factor(int sf);
 void lora_set_bandwidth(long sbw);
 void lora_set_coding_rate(int denominator);
+
+int lora_read_reg(int reg);
+void lora_dump_registers(void);
 
 #endif

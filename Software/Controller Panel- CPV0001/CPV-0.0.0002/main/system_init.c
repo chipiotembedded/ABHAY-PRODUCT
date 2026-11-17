@@ -10,5 +10,5 @@ void system_initialize() {
 
     initialize_buttons();
     initialize_activity_log();
-    
+    receiver_start();
 }

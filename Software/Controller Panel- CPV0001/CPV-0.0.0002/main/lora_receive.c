@@ -67,62 +67,6 @@ FlatOwner* find_owner_by_mac(const char *mac) {
     return NULL; // not found
 }
 
-/*
-static void lora_receive_task(void *param){
-    uint8_t buf[100];
-    int len;
-
-    lora_receive();
-    ESP_LOGI(TAG, "LoRa Receiver Task Started");
-    while (1) {
-        len = lora_receive_packet(buf, sizeof(buf)-1);
-        if (len > 0) {
-            
-            buf[len] = '\0'; // safe string termination
-            lcd_register_activity();
-            
-            //string tokenization for extracting actual packet
-            char temp[100];
-            strncpy(temp, (char*)buf, sizeof(temp));
-            temp[sizeof(temp)-1] = '\0';
-            char *sender = strtok(temp, "|");
-
-            ESP_LOGI(TAG, "Received: %s (len=%d)", (char*)buf , len);
-
-            if (should_accept(sender)) {
-                FlatOwner *owner = find_owner_by_mac(sender);
-                if (owner) {
-                    shouldBeep = true;
-                    i2c_lcd_clear();
-                    i2c_lcd_set_cursor(0, 0);
-                    i2c_lcd_send_string(owner->name);
-                    i2c_lcd_set_cursor(1, 0);
-                    i2c_lcd_send_string(owner->flat);
-
-                    ESP_LOGI(TAG, "Owner Found: %s, Flat %s", owner->name, owner->flat);
-                    log_received_data(false, owner->name, owner->flat);
-
-                    char timestr[32]; 
-                    rtc_get_time_string(timestr, sizeof(timestr));
-                    ESP_LOGI(TAG, "Received at: %s", timestr);
-
-                } else {
-                    i2c_lcd_clear();
-                    i2c_lcd_set_cursor(0, 0);
-                    i2c_lcd_send_string("Unknown MAC");
-                    i2c_lcd_set_cursor(1, 0);
-                    i2c_lcd_send_string(sender);
-
-                    ESP_LOGW (TAG, "MAC not in CSV: %s", sender);
-                }
-            }
-            lora_receive();
-        }
-        vTaskDelay(pdMS_TO_TICKS(100)); // Small delay to yield CPU
-    }
-}
-*/
-
 static void lora_receive_task(void *param)
 {
     uint8_t buf[100];
@@ -132,6 +76,18 @@ static void lora_receive_task(void *param)
     ESP_LOGI(TAG, "LoRa Receiver Task Started");
 
     while (1){
+        static int64_t last_log = 0;
+        int64_t now = esp_timer_get_time() / 1000;
+        if (now - last_log > 5000)   // every 5 seconds
+        {
+            last_log = now;
+            ESP_LOGI(TAG,
+                    "REG_VERSION=0x%02X OP_MODE=0x%02X IRQ=0x%02X",
+                    lora_read_reg(REG_VERSION),
+                    lora_read_reg(REG_OP_MODE),
+                    lora_read_reg(REG_IRQ_FLAGS));
+        }
+
         len = lora_receive_packet(buf, sizeof(buf) - 1);
         if (len > 0)
         {
@@ -172,20 +128,7 @@ static void lora_receive_task(void *param)
             FlatOwner *owner = find_owner_by_mac(sender);
             if (owner){
                 shouldBeep = true;
-                // vTaskDelay(pdMS_TO_TICKS(50));
-                // i2c_lcd_clear();
-                // i2c_lcd_set_cursor(0, 0);
-                // i2c_lcd_send_string(owner->name);
-                // i2c_lcd_set_cursor(1, 0);
-                // i2c_lcd_send_string(owner->flat);
-                // if (xSemaphoreTake(lcd_mutex, pdMS_TO_TICKS(20))){
-                //     i2c_lcd_clear();
-                //     i2c_lcd_set_cursor(0,0);
-                //     i2c_lcd_send_string(owner->name);
-                //     i2c_lcd_set_cursor(1,0);
-                //     i2c_lcd_send_string(owner->flat);
-                //     xSemaphoreGive(lcd_mutex);
-                // }
+                
                 lcd_display_text(0, 0, owner->name, true);
                 lcd_display_text(1, 0, owner->flat, false);
                 //vTaskDelay(pdMS_TO_TICKS(10));
@@ -202,71 +145,19 @@ static void lora_receive_task(void *param)
                 ESP_LOGI(TAG, "Received at: %s", timestr);
             }
             else{
-                // i2c_lcd_clear();
-                // i2c_lcd_set_cursor(0, 0);
-                // i2c_lcd_send_string("Unknown MAC");
                 lcd_display_text(0, 0, "Unknown MAC", true);
-                // i2c_lcd_set_cursor(1, 0);
-                // i2c_lcd_send_string(sender);
                 lcd_display_text(1, 0, sender, false);
                 ESP_LOGW(TAG, "MAC not in CSV: %s", sender);
             }
             lora_receive();
+            ESP_LOGI(TAG,
+            "After lora_receive(): OP_MODE=0x%02X",
+            lora_read_reg(REG_OP_MODE));
         }
         vTaskDelay(pdMS_TO_TICKS(10));
+        esp_task_wdt_reset();
     }
 }
-
-/*
-static void lora_receive_task(void *param){
-    uint8_t buf[256];
-    int len;
-
-    lora_receive();
-    ESP_LOGI(TAG, "LoRa Receiver Task Started");
-    while (1) {
-        len = lora_receive_packet(buf, sizeof(buf));
-        if (len > 0) {
-            if (len >= sizeof(buf)) 
-            len = sizeof(buf) - 1;
-            buf[len] = '\0'; // safe string termination
-            lcd_register_activity();
-            
-            ESP_LOGI(TAG, "Received: %s (len=%d)", (char*)buf, len);
-
-            if (should_accept((char*)buf)) {
-                FlatOwner *owner = find_owner_by_mac((char*)buf);
-                if (owner) {
-                    shouldBeep = true;
-                    i2c_lcd_clear();
-                    i2c_lcd_set_cursor(0, 0);
-                    i2c_lcd_send_string(owner->name);
-                    i2c_lcd_set_cursor(1, 0);
-                    i2c_lcd_send_string(owner->flat);
-
-                    ESP_LOGI(TAG, "Owner Found: %s, Flat %s", owner->name, owner->flat);
-                    log_received_data(false, owner->name, owner->flat);
-
-                    char timestr[32]; 
-                    rtc_get_time_string(timestr, sizeof(timestr));
-                    ESP_LOGI(TAG, "Received at: %s", timestr);
-
-                } else {
-                    i2c_lcd_clear();
-                    i2c_lcd_set_cursor(0, 0);
-                    i2c_lcd_send_string("Unknown MAC");
-                    i2c_lcd_set_cursor(1, 0);
-                    i2c_lcd_send_string((char*)buf);
-
-                    ESP_LOGW(TAG, "MAC not in CSV: %s", (char*)buf);
-                }
-            }
-            lora_receive();
-        }
-        vTaskDelay(pdMS_TO_TICKS(100)); // Small delay to yield CPU
-    }
-}
-*/
 
 void receiver_start(void) {
     // Initialize LoRa                  
@@ -277,17 +168,25 @@ void receiver_start(void) {
     lora_set_sync_word (0XF3);
     lora_set_spreading_factor (12);
     lora_enable_crc();
-    lora_explicit_header_mode();         
-
-    // TaskHandle_t lora_handle = NULL;
-    // TaskHandle_t buzzer_handle = NULL;
+    lora_explicit_header_mode();  
+    
+    TaskHandle_t lora_handle = NULL;
 
     // Start tasks
     //xTaskCreate(lora_receive_task, "lora_rx_task", 8196, NULL, 10, NULL);
-    xTaskCreatePinnedToCore(lora_receive_task, "lora_rx_task", 8192, NULL, 10, NULL, 0);
+    xTaskCreatePinnedToCore(lora_receive_task, "lora_rx_task", 8192, NULL, 10, &lora_handle, 0);
     //xTaskCreatePinnedToCore(buzzer_control_task, "buzzer_ctl", 4096, NULL, 5, NULL, 0);
     xTaskCreate(buzzer_control_task, "buzzer_ctl", 4096, NULL, 5, NULL);
     
     // if (lora_handle) esp_task_wdt_add(lora_handle);
     // if (buzzer_handle) esp_task_wdt_add(buzzer_handle);
+    if (lora_handle) {
+        esp_err_t wdt_err = esp_task_wdt_add(lora_handle);
+        if (wdt_err == ESP_OK) {
+            ESP_LOGI(TAG, "lora_rx_task registered with Task Watchdog");
+        } else {
+            ESP_LOGW(TAG, "Failed to register lora_rx_task with Task Watchdog: %s",
+                     esp_err_to_name(wdt_err));
+        }
+    }
 }

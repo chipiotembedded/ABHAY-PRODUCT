@@ -1,0 +1,109 @@
+[1970-01-01 00:00:00] [0;32mI (688) PASSWORD: Password loaded[0m
+[1970-01-01 00:00:00] [0;32mI (718) WIFI_MANAGER: WiFi credentials loaded[0m
+[1970-01-01 00:00:00] [0;32mI (738) WIFI_MANAGER: SSID: Paras 1[0m
+[1970-01-01 00:00:00] [0;32mI (748) WIFI_MANAGER: PASS: 9890090011[0m
+[1970-01-01 00:00:01] [0;33mW (1878) LORA: Entering the receiver mode...[0m
+[1970-01-01 00:00:01] [0;32mI (1888) LORA: LoRa set to continuous receive mode.[0m
+[1970-01-01 00:00:01] [0;32mI (1898) LORA_RECEIVE: LoRa Receiver Task Started[0m
+[1970-01-01 00:00:01] [0;32mI (1878) LORA_RECEIVE: lora_rx_task registered with Task Watchdog[0m
+[1970-01-01 00:00:01] [0;32mI (1988) Main: lcd_bl_timer task created successfully[0m
+[1970-01-01 00:00:01] [0;32mI (2038) pp: pp rom version: e7ae62f[0m
+[1970-01-01 00:00:01] [0;32mI (2178) net80211: net80211 rom version: e7ae62f[0m
+[1970-01-01 00:00:01] I (2218) wifi:[1970-01-01 00:00:01] wifi driver task: 3fcb8958, prio:23, stack:6656, core=0[1970-01-01 00:00:01] 
+[1970-01-01 00:00:01] I (2318) wifi:[1970-01-01 00:00:02] wifi firmware version: b9f67df[1970-01-01 00:00:02] 
+[1970-01-01 00:00:02] I (2408) wifi:[1970-01-01 00:00:02] wifi certification version: v7.0[1970-01-01 00:00:02] 
+[1970-01-01 00:00:02] I (2498) wifi:[1970-01-01 00:00:02] config NVS flash: enabled[1970-01-01 00:00:02] 
+[1970-01-01 00:00:02] I (2588) wifi:[1970-01-01 00:00:02] config nano formatting: disabled[1970-01-01 00:00:02] 
+[1970-01-01 00:00:02] I (2838) wifi:[1970-01-01 00:00:02] Init data frame dynamic rx buffer num: 32[1970-01-01 00:00:02] 
+[1970-01-01 00:00:02] I (2928) wifi:[1970-01-01 00:00:02] Init static rx mgmt buffer num: 5[1970-01-01 00:00:02] 
+[1970-01-01 00:00:02] I (3018) wifi:[1970-01-01 00:00:02] Init management short buffer num: 32[1970-01-01 00:00:02] 
+[1970-01-01 00:00:02] I (3118) wifi:[1970-01-01 00:00:02] Init dynamic tx buffer num: 32[1970-01-01 00:00:02] 
+[1970-01-01 00:00:02] I (3218) wifi:[1970-01-01 00:00:03] Init static tx FG buffer num: 2[1970-01-01 00:00:03] 
+[1970-01-01 00:00:03] I (3478) wifi:[1970-01-01 00:00:03] Init static rx buffer size: 1600[1970-01-01 00:00:03] 
+[1970-01-01 00:00:03] I (3578) wifi:[1970-01-01 00:00:03] Init static rx buffer num: 10[1970-01-01 00:00:03] 
+[1970-01-01 00:00:03] I (3678) wifi:[1970-01-01 00:00:03] Init dynamic rx buffer num: 32[1970-01-01 00:00:03] 
+[1970-01-01 00:00:03] [0;32mI (3778) wifi_init: rx ba win: 6[0m
+[1970-01-01 00:00:03] [0;32mI (3818) wifi_init: accept mbox: 6[0m
+[1970-01-01 00:00:03] [0;32mI (3858) wifi_init: tcpip mbox: 32[0m
+[1970-01-01 00:00:03] [0;32mI (3898) wifi_init: udp mbox: 6[0m
+[1970-01-01 00:00:03] [0;32mI (3938) wifi_init: tcp mbox: 6[0m
+[1970-01-01 00:00:03] [0;32mI (4138) wifi_init: tcp tx win: 5760[0m
+[1970-01-01 00:00:03] [0;32mI (4168) wifi_init: tcp rx win: 5760[0m
+[1970-01-01 00:00:03] [0;32mI (4208) wifi_init: tcp mss: 1440[0m
+[1970-01-01 00:00:03] [0;32mI (4248) wifi_init: WiFi IRAM OP enabled[0m
+[1970-01-01 00:00:03] [0;32mI (4288) wifi_init: WiFi RX IRAM OP enabled[0m
+[1970-01-01 00:00:03] [0;32mI (4328) WIFI_MANAGER: WiFi credentials loaded[0m
+[1970-01-01 00:00:04] [0;32mI (4378) WIFI_MANAGER: SSID: Paras 1[0m
+[1970-01-01 00:00:04] [0;32mI (4428) WIFI_MANAGER: PASS: 9890090011[0m
+[1970-01-01 00:00:05] [0;32mI (5438) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[1970-01-01 00:00:05] [0;32mI (5468) WIFI_MANAGER: Using stored WiFi credentials[0m
+[1970-01-01 00:00:05] I (5528) wifi:[1970-01-01 00:00:05] Set ps type: 0, coexist: 0
+[1970-01-01 00:00:05] 
+[1970-01-01 00:00:05] [0;32mI (5678) phy_init: phy_version 712,87e8c20e,Apr 13 2026,18:51:10[0m
+[1970-01-01 00:00:05] I (5768) wifi:[1970-01-01 00:00:05] mode : sta (98:a3:16:d1:20:f8)[1970-01-01 00:00:05] 
+[1970-01-01 00:00:05] I (6038) wifi:[1970-01-01 00:00:05] enable tsf[1970-01-01 00:00:05] 
+[1970-01-01 00:00:05] [0;32mI (6158) WIFI_MANAGER: WiFi Started. Connecting...[0m
+[1970-01-01 00:00:05] [0;32mI (6158) WIFI_MANAGER: WiFi initialization finished[0m
+[1970-01-01 00:00:06] I (6388) wifi:[1970-01-01 00:00:06] state: auth -> assoc (0x0)[1970-01-01 00:00:06] 
+[1970-01-01 00:00:06] I (6558) wifi:[1970-01-01 00:00:06] state: assoc -> run (0x10)[1970-01-01 00:00:06] 
+[1970-01-01 00:00:06] I (6808) wifi:[1970-01-01 00:00:06] connected with Paras 1, aid = 1, channel 1, BW20, bssid = 60:02:b4:20:df:d0[1970-01-01 00:00:06] 
+[1970-01-01 00:00:06] I (6888) wifi:[1970-01-01 00:00:06] security: WPA2-PSK, phy: bgn, rssi: -67, cipher(pairwise:0x3, group:0x3), pmf:0[1970-01-01 00:00:06] 
+[1970-01-01 00:00:06] I (6978) wifi:[1970-01-01 00:00:06] pm start, type: 0
+[1970-01-01 00:00:06] 
+[1970-01-01 00:00:06] I (7068) wifi:[1970-01-01 00:00:06] dp: 1, bi: 102400, li: 3, scale listen interval from 307200 us to 307200 us[1970-01-01 00:00:06] 
+[1970-01-01 00:00:06] I (7158) wifi:[1970-01-01 00:00:06] set rx beacon pti, rx_bcn_pti: 0, bcn_timeout: 25000, mt_pti: 0, mt_time: 10000[1970-01-01 00:00:07] 
+[1970-01-01 00:00:07] I (7408) wifi:[1970-01-01 00:00:07] AP's beacon interval = 102400 us, DTIM period = 3[1970-01-01 00:00:07] 
+[1970-01-01 00:00:07] I (7538) wifi:[1970-01-01 00:00:07] <ba-add>idx:0 (ifx:0, 60:02:b4:20:df:d0), tid:0, ssn:3, winSize:64[1970-01-01 00:00:07] 
+[1970-01-01 00:00:08] [0;32mI (8688) esp_netif_handlers: sta ip: 192.168.1.167, mask: 255.255.255.0, gw: 192.168.1.102[0m
+[1970-01-01 00:00:08] [0;32mI (8728) WIFI_MANAGER: Got IP: 192.168.1.167[0m
+[1970-01-01 00:00:08] [0;32mI (8758) WIFI_MANAGER: Connected to WiFi successfully[0m
+[1970-01-01 00:00:09] [0;32mI (9788) RTC_DRIVER: RTC Init Started[0m
+[1970-01-01 05:30:09] [0;32mI (9828) RTC_DRIVER: Initializing SNTP[0m
+[1970-01-01 05:30:09] [0;32mI (9868) RTC_DRIVER: Waiting for time sync... (1/23)[0m
+[1970-01-01 05:30:10] [0;32mI (10448) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[2026-08-26 12:55:53] [0;32mI (11658) RTC_DRIVER: SNTP time sync callback received[0m
+[2026-08-26 12:55:53] [0;32mI (11898) RTC_DRIVER: Time synchronized successfully[0m
+[2026-08-26 12:55:53] [0;32mI (11938) USB_UPDATE: USB update task started[0m
+[2026-08-26 12:55:53] [0;32mI (11958) Main: USB update task created successfully[0m
+[2026-08-26 12:55:57] [0;32mI (15458) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[2026-08-26 12:55:58] I (16628) wifi:[2026-08-26 12:55:58] [ADDBA]RX DELBA, reason:37, delete tid:0, initiator:1(originator)[2026-08-26 12:55:58] 
+[2026-08-26 12:55:58] I (16728) wifi:[2026-08-26 12:55:58] <ba-del>idx:0, tid:0[2026-08-26 12:55:58] 
+[2026-08-26 12:55:59] [0;32mI (18078) main_task: Returned from app_main()[0m
+[2026-08-26 12:56:02] [0;32mI (20468) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[2026-08-26 12:56:06] [0;32mI (24848) LORA_RECEIVE: Received raw: FC:B4:67:F4:83:E4 (len=17)[0m
+[2026-08-26 12:56:06] [0;32mI (24918) LORA_RECEIVE: Parsed sender: FC:B4:67:F4:83:E4[0m
+[2026-08-26 12:56:06] [0;32mI (25108) LORA_RECEIVE: Owner Found: DDDD, Flat A104[0m
+[2026-08-26 12:56:06] [0;32mI (25178) ACTIVITY_LOG: Log stored. Total: 24[0m
+[2026-08-26 12:56:06] [0;32mI (25218) LORA_RECEIVE: Received at: 26-08-2026 12:56[0m
+[2026-08-26 12:56:06] [0;33mW (25258) LORA: Entering the receiver mode...[0m
+[2026-08-26 12:56:06] [0;32mI (25298) LORA: LoRa set to continuous receive mode.[0m
+[2026-08-26 12:56:06] [0;32mI (25338) LORA_RECEIVE: After lora_receive(): OP_MODE=0x85[0m
+[2026-08-26 12:56:07] [0;32mI (25478) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[2026-08-26 12:56:12] [0;32mI (30488) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[2026-08-26 12:56:14] [0;32mI (33268) LORA_RECEIVE: Received raw: FC:B4:67:F4:83:E4 (len=17)[0m
+[2026-08-26 12:56:14] [0;32mI (33318) LORA_RECEIVE: Parsed sender: FC:B4:67:F4:83:E4[0m
+[2026-08-26 12:56:14] [0;32mI (33358) LORA_RECEIVE: Owner Found: DDDD, Flat A104[0m
+[2026-08-26 12:56:15] [0;32mI (33448) ACTIVITY_LOG: Log stored. Total: 25[0m
+[2026-08-26 12:56:15] [0;32mI (33498) LORA_RECEIVE: Received at: 26-08-2026 12:56[0m
+[2026-08-26 12:56:15] [0;33mW (33698) LORA: Entering the receiver mode...[0m
+[2026-08-26 12:56:15] [0;32mI (33738) LORA: LoRa set to continuous receive mode.[0m
+[2026-08-26 12:56:15] [0;32mI (33798) LORA_RECEIVE: After lora_receive(): OP_MODE=0x85[0m
+[2026-08-26 12:56:17] [0;32mI (35498) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[2026-08-26 12:56:22] [0;32mI (40508) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x85 IRQ=0x00[0m
+[2026-08-26 12:56:27] [0;32mI (45518) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[2026-08-26 12:56:32] [0;32mI (50528) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[2026-08-26 12:56:37] [0;32mI (55538) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[2026-08-26 12:56:42] [0;32mI (60548) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[2026-08-26 12:56:47] [0;32mI (65558) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[2026-08-26 12:56:52] [0;32mI (70568) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[2026-08-26 12:56:57] [0;32mI (75578) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[2026-08-26 12:56:58] [0;32mI (76808) USB_UPDATE: USB connected - installing device[0m
+[2026-08-26 12:56:58] [0;32mI (77228) USB_UPDATE: CSV copied to LittleFS[0m
+[2026-08-26 12:56:58] [0;32mI (77268) PASSWORD: Password file copied to LittleFS[0m
+[2026-08-26 12:56:58] [0;32mI (77308) WIFI_MANAGER: wifi cred txt copied to LittleFS[0m
+[2026-08-26 12:56:58] [0;32mI (77348) PASSWORD: Password loaded[0m
+[2026-08-26 12:56:59] [0;32mI (77398) WIFI_MANAGER: WiFi credentials loaded[0m
+[2026-08-26 12:56:59] [0;32mI (77428) WIFI_MANAGER: SSID: Paras 1[0m
+[2026-08-26 12:56:59] [0;32mI (77458) WIFI_MANAGER: PASS: 9890090011[0m
+[2026-08-26 12:57:02] [0;32mI (80588) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m
+[2026-08-26 12:57:07] [0;32mI (85598) LORA_RECEIVE: REG_VERSION=0x12 OP_MODE=0x09 IRQ=0x15[0m

@@ -541,7 +541,7 @@ lora_receive_packet(uint8_t *buf, int size)
    for(int i=0; i<len; i++) 
       buf[i] = lora_read_reg(REG_FIFO);
 
-   lora_idle();  
+   //lora_idle();  
 
    // Log RSSI and SNR for debugging signal strength
    // int rssi = lora_read_reg(REG_PKT_RSSI_VALUE);
