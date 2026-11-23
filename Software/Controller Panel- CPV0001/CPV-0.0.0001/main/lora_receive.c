@@ -38,7 +38,7 @@ static bool should_accept(const char *mac) {
 }
 
 // ================= Panic System Flags =================
-bool shouldBeep = false;
+volatile bool shouldBeep = false;
 
 // ================= Buzzer Task =================
 void buzzer_control_task(void *pvParameter) {

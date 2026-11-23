@@ -181,19 +181,28 @@ void handle_next_button_action() {
 
 // ================= Silence Button Handler =================
 void handle_silence_button(void) {
-    shouldBeep = false;
-    gpio_set_level(BUZZER_PIN, 0);
-    printf("Buzzer silenced - Buttons Activated\n");
+    if(shouldBeep){
+        shouldBeep = false;
+        printf("Buzzer silenced - Buttons Activated\n");
+    } 
+    else{
+        shouldBeep= true;
+        printf("Buzzer ON - Other buttons locked\n");
+    }
 }
 
 void button_task(void *arg) {
     while (1) {
+        bool silence_prev = false;   // remembers last state of silence button
+
         // Check SILENCE button FIRST - ALWAYS WORKS even when shouldBeep is true
-        if (is_button_pressed(Silence_BUTTON)) {
+        bool silence_now = is_button_pressed(Silence_BUTTON);
+        if (silence_now && !silence_prev) {
             lcd_register_activity();
             handle_silence_button();
             vTaskDelay(pdMS_TO_TICKS(POST_PRESS_DELAY_MS));
         }
+        silence_prev = silence_now;
 
         // // Check OTHER 5 BUTTONS only if shouldBeep is FALSE
         if (!shouldBeep) {

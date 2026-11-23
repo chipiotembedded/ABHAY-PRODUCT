@@ -36,7 +36,7 @@ typedef struct {
 } FlatOwner;
 
 // ================== Globals ==================
-extern bool shouldBeep;
+extern volatile bool shouldBeep;
 // extern QueueHandle_t lora_rx_queue;
 
 // ================== Functions ==================
